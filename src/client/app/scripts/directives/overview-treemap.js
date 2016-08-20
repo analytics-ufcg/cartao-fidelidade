@@ -14,10 +14,8 @@ angular.module('cartaoFidelidadeApp')
           };
 
           // Watch for resize event
-          scope.$watch(function() {
-            return angular.element($window)[0].innerWidth;
-          }, function() {
-            scope.render(scope.grupos);
+          scope.$watch('grupos', function(oldValue, newValue) {
+              scope.render(scope.grupos);
           });
 
           scope.render = function(data) {
@@ -27,8 +25,6 @@ angular.module('cartaoFidelidadeApp')
 
             var d3 = $window.d3;
             var color = d3.scale.category20c();
-
-            console.log(color("275c493c-96a2-4175-ba25-8073e941f51f"));
 
             var treemap = d3.layout.treemap()
                 .size([width, height])
@@ -47,7 +43,7 @@ angular.module('cartaoFidelidadeApp')
                 .enter().append("div")
                   .attr("class", "node")
                   .call(position)
-                  .style("background", function(d) { return color(d.id); })
+                  .style("background", function(d) { return color(d.cnpjCpf); })
                   .text(function(d) { return d.children ? null : d.nome; });
 
               d3.selectAll("input").on("change", function change() {
