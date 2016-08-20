@@ -1,2 +1,6 @@
 target/
 hs_err_pid*
+src/client/.sass-cache/
+src/client/.tmp/
+src/client/bower_components/
+src/client/node_modules/
