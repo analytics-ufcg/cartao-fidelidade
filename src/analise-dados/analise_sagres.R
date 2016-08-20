@@ -84,9 +84,9 @@ fornecedores_top_n_ugestora <- contratos_stats %>%
   top_n(100, n_ugestora)%>%
   arrange(desc(n_ugestora))
 
-fornecedores_top_valor <- fornecedores_stats %>%
-  top_n(100, valor)%>%
-  arrange(desc(valor))
+fornecedores_top_valor <- contratos_stats %>%
+  top_n(100, valor_total_contratos)%>%
+  arrange(desc(valor_total_contratos))
 
 # TODO: Analise - Cruzar fornecedores que ganharam contratos em mais municipios com os partidos
 # do governante desses municípios na epoca.
