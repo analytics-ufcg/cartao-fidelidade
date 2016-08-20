@@ -1,0 +1,10 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import "customVariables";
+// bower:scss
+@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
+@import "bootstrapCustom";
+
+body {
+  padding-top: 70px;
+}
