@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('sabApp')
+  angular.module('cartaoFidelidadeApp')
     .controller('MainCtrl', MainCtrl);
 
   MainCtrl.$inject = [];
