@@ -13,5 +13,4 @@ public class AppTest extends BaseTest {
         .expect(200)
         .header("Content-Type", "text/html;charset=UTF-8");
   }
-
 }
