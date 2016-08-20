@@ -14,7 +14,7 @@
     "angular-mocks": "^1.4.0"
   },
   "appPath": "app",
-  "moduleName": "sabApp",
+  "moduleName": "cartaoFidelidadeApp",
   "overrides": {
     "bootstrap": {
       "main": [
