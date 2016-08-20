@@ -6,7 +6,6 @@ import java.util.List;
  * "Fornecedor" entity data holder.
  */
 public class Fornecedor {
-	public String id;
 	public String cnpjCpf;
 	public String nome;
 	public String atividadeEconomica;

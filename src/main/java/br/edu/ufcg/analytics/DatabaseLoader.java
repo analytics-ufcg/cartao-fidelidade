@@ -21,9 +21,11 @@ public class DatabaseLoader {
 	@PostConstruct
 	public void start() {
 		try (Connection conn = this.ds.getConnection(); Statement stmt = conn.createStatement()) {
-			stmt.executeUpdate("CREATE TABLE FORNECEDORES AS SELECT * FROM CSVREAD('public/db/fornecedores.csv');");
+			conn.setAutoCommit(true);
+			stmt.executeUpdate("CREATE TABLE LICITACOES AS SELECT * FROM CSVREAD('public/db/licitacao_empresa_partido.csv');");
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 }
