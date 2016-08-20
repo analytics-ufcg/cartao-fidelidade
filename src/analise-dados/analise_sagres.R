@@ -92,3 +92,6 @@ fornecedores_top_valor <- contratos_stats %>%
 # do governante desses municípios na epoca.
 # Fornecedor x Quantidade de contratos x Porcentagem por partido do governante
 # Fornecedor x Montante de contratos x Porcentagem por partido do governante
+
+# TODO: ter dado completo de cada contrato
+# TODO: ter ano do contrato
