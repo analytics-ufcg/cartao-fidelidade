@@ -7,6 +7,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 
 body {
   font-family: 'Montserrat', sans-serif;
+  background-color: $brand-primary;
+  color: #fff;
 }
 
 .header-title {
@@ -26,9 +28,10 @@ body {
 }
 
 .card {
-  border-radius: 2px;
   padding: $padding-large-vertical $padding-base-horizontal;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  margin-bottom: $padding-large-vertical;
+  background-color: #fff;
+  color: $brand-primary;
 }
 
 .card-subtitle {
