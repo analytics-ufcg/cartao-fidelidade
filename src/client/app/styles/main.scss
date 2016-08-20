@@ -18,3 +18,20 @@ body {
     margin-bottom: 30px;
   }
 }
+
+.header-subtitle {
+  margin-top: 60px;
+  margin-bottom: 60px;
+  font-size: 14px;
+}
+
+.card {
+  border-radius: 2px;
+  padding: $padding-large-vertical $padding-base-horizontal;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.card-subtitle {
+  color: $gray-dark;
+  font-size: 12px;
+}

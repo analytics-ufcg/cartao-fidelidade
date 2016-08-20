@@ -4,10 +4,13 @@
   angular.module('cartaoFidelidadeApp')
     .controller('MainCtrl', MainCtrl);
 
-  MainCtrl.$inject = [];
+  MainCtrl.$inject = ['Fornecedores'];
 
   /*jshint latedef: nofunc */
-  function MainCtrl() {
+  function MainCtrl(Fornecedores) {
     var vm = this;
+    vm.fornecedores = [];
+
+    vm.fornecedores = Fornecedores.query();
   }
 })();
