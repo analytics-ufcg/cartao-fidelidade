@@ -14,7 +14,7 @@ import org.jooby.mvc.Produces;
 /**
  * All Handlers related to Fornecedor.
  */
-@Path("/fornecedor")
+@Path("/fornecedores")
 @Consumes("application/json")
 @Produces("application/json")
 public class FornecedorHandler {
@@ -75,4 +75,35 @@ public class FornecedorHandler {
 		}
 		return Results.json(f);
 	}
+
+	@GET
+	public Result list() {
+		Fornecedor f = new Fornecedor();
+		f.nome = "Super Dragon Ball Z";
+		f.atividadeEconomica = "Topa Tudo";
+		f.anoInicial = 2008;
+		f.anoFinal = 2016;
+		f.qtdLicitacoes = (new Random()).nextInt(1000);
+		f.valorTotal = (new Random()).nextDouble();
+		List<Fidelidade> fidelidade = new LinkedList<>();
+		fidelidade.add(new Fidelidade(
+				"PMDB",
+				(new Random()).nextInt(1000),
+				(new Random()).nextInt(1000),
+				(new Random()).nextDouble()));
+		fidelidade.add(new Fidelidade(
+				"PT",
+				(new Random()).nextInt(1000),
+				(new Random()).nextInt(1000),
+				(new Random()).nextDouble()));
+		fidelidade.add(new Fidelidade(
+				"PSDB",
+				(new Random()).nextInt(1000),
+				(new Random()).nextInt(1000),
+				(new Random()).nextDouble()));
+		f.fidelidade = fidelidade;
+		List<Fornecedor> returned = new LinkedList<>();
+		returned.add(f);
+		return Results.json(returned);
+	}	
 }
