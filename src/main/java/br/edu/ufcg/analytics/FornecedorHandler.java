@@ -30,7 +30,7 @@ public class FornecedorHandler {
 		}
 		String type = parts[0];
 		String value = parts[1];
-		
+
 		// Creating a dummy Fornecedor.
 		// TODO: Remove and fetch data from database.
 		Fornecedor f = new Fornecedor();
@@ -41,20 +41,11 @@ public class FornecedorHandler {
 		f.qtdLicitacoes = (new Random()).nextInt(1000);
 		f.valorTotal = (new Random()).nextDouble();
 		List<Fidelidade> fidelidade = new LinkedList<>();
-		fidelidade.add(new Fidelidade(
-				"PMDB",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
+		fidelidade.add(new Fidelidade("PMDB", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
 				(new Random()).nextDouble()));
-		fidelidade.add(new Fidelidade(
-				"PT",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
+		fidelidade.add(new Fidelidade("PT", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
 				(new Random()).nextDouble()));
-		fidelidade.add(new Fidelidade(
-				"PSDB",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
+		fidelidade.add(new Fidelidade("PSDB", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
 				(new Random()).nextDouble()));
 		f.fidelidade = fidelidade;
 		switch (type) {
@@ -78,32 +69,26 @@ public class FornecedorHandler {
 
 	@GET
 	public Result list() {
-		Fornecedor f = new Fornecedor();
-		f.nome = "Super Dragon Ball Z";
-		f.atividadeEconomica = "Topa Tudo";
-		f.anoInicial = 2008;
-		f.anoFinal = 2016;
-		f.qtdLicitacoes = (new Random()).nextInt(1000);
-		f.valorTotal = (new Random()).nextDouble();
-		List<Fidelidade> fidelidade = new LinkedList<>();
-		fidelidade.add(new Fidelidade(
-				"PMDB",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
-				(new Random()).nextDouble()));
-		fidelidade.add(new Fidelidade(
-				"PT",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
-				(new Random()).nextDouble()));
-		fidelidade.add(new Fidelidade(
-				"PSDB",
-				(new Random()).nextInt(1000),
-				(new Random()).nextInt(1000),
-				(new Random()).nextDouble()));
-		f.fidelidade = fidelidade;
+		String[] names = new String[] { "Super Dragon Ball Z", "Pokemon Go", "Oh My!", "Ghostbusters", "Blablabla" };
 		List<Fornecedor> returned = new LinkedList<>();
-		returned.add(f);
+		for (int i = 0; i < names.length; i++) {
+			Fornecedor f = new Fornecedor();
+			f.nome = names[i];
+			f.atividadeEconomica = "Topa Tudo";
+			f.anoInicial = 2008;
+			f.anoFinal = 2016;
+			f.qtdLicitacoes = (new Random()).nextInt(1000);
+			f.valorTotal = (new Random()).nextDouble();
+			List<Fidelidade> fidelidade = new LinkedList<>();
+			fidelidade.add(new Fidelidade("PMDB", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
+					(new Random()).nextDouble()));
+			fidelidade.add(new Fidelidade("PT", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
+					(new Random()).nextDouble()));
+			fidelidade.add(new Fidelidade("PSDB", (new Random()).nextInt(1000), (new Random()).nextInt(1000),
+					(new Random()).nextDouble()));
+			f.fidelidade = fidelidade;
+			returned.add(f);
+		}
 		return Results.json(returned);
-	}	
+	}
 }
