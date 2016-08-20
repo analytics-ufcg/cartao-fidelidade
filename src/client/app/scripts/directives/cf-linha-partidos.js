@@ -94,7 +94,8 @@
               yScale = d3.scale.ordinal()
                   .domain(months)
                   .rangeRoundBands([0, height], .1),
-              colours = d3.scale.category10(),
+              colours = d3.scale.ordinal().range(
+                ["#c0392b", "#2980b9", "#f1c40f", "#27ae60", "#7f8c8d"]),
               groups = svg.selectAll('g')
                   .data(dataset)
                   .enter()
