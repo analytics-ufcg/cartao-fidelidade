@@ -24,6 +24,6 @@
       ]
     }
   },
-  "development" : "https://localhost:8080",
+  "development" : "http://localhost:8080",
   "production" : "https://cartao-fidelidade.herokuapp.com"
 }

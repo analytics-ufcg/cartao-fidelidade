@@ -473,7 +473,7 @@ module.exports = function (grunt) {
         },
         options: {
           replacements: [{
-            pattern: /http:\/\/localhost:5003\/api/ig,
+            pattern: /http:\/\/localhost:8080/ig,
             replacement: api
           }]
         }
