@@ -3,6 +3,7 @@ package br.edu.ufcg.analytics;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.jooby.Result;
 import org.jooby.Results;
@@ -73,6 +74,8 @@ public class FornecedorHandler {
 		List<Fornecedor> returned = new LinkedList<>();
 		for (int i = 0; i < names.length; i++) {
 			Fornecedor f = new Fornecedor();
+			f.id = UUID.randomUUID().toString();
+			f.cnpjCpf = UUID.randomUUID().toString();
 			f.nome = names[i];
 			f.atividadeEconomica = "Topa Tudo";
 			f.anoInicial = 2008;
