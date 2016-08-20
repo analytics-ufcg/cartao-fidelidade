@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/cartao-fidelidade-1.0.jar
+web: java $JAVA_OPTS -jar target/cartao-fidelidade-1.0.jar application.port=${PORT}
