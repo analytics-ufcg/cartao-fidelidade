@@ -25,15 +25,15 @@ ExtraiMunicipioDeUnidadeGestora <- function(municipios, ugestora) {
 
 sagres_bd <- src_mysql("SAGRES", "localhost", 3306, password = "123456")
 
-fornecedores <- read.csv("../CSV/fornecedores.csv", stringsAsFactors = F)
+# Se der problema de encoding, rodar comando:
+# - dbGetQuery(sagres_bd$con, "set names utf8")
+
 fornecedores <- tbl(sagres_bd, "fornecedores")
-#codigo_ugestora <- read.csv("../CSV/codigo_ugestora.csv", stringsAsFactors = F)
 codigo_ugestora <- tbl(sagres_bd, "codigo_ugestora")
-contratos <- read.csv("../CSV/contratos.csv", dec = ",", stringsAsFactors = F)
 contratos <- tbl(sagres_bd, "contratos")
 
-eleicoes_pb_2008_file <- "../dados-eleicoes/votacao_candidato_munzona_2008_PB.txt"
-eleicoes_pb_2012_file <- "../dados-eleicoes/votacao_candidato_munzona_2012_PB.txt"
+eleicoes_pb_2008_file <- "../../dados/votacao_candidato_munzona_2008_PB.txt"
+eleicoes_pb_2012_file <- "../../dados/votacao_candidato_munzona_2012_PB.txt"
 
 res_prefeitos_pb <- ReadDadosEleicoesMunicipais(eleicoes_pb_2008_file) %>%
                     bind_rows(ReadDadosEleicoesMunicipais(eleicoes_pb_2012_file)) %>%
@@ -62,6 +62,7 @@ nomes_ugestora <- codigo_ugestora %>%
 
 contratos_stats <- contratos %>%
   filter(nu_CPFCNPJ != "") %>%
+  collect(n = Inf) %>%
   mutate(ano_eleicao = ifelse(dt_Ano > 2012, 2012, ifelse(dt_Ano > 2008, 2008, NA))) %>%
   group_by(nu_CPFCNPJ, ano_eleicao, cd_UGestora) %>%
   summarise(n_contratos=n(), valor_contratos = sum(vl_TotalContrato))
@@ -90,6 +91,4 @@ fornecedores_top_valor <- fornecedores_stats %>%
 # TODO: Analise - Cruzar fornecedores que ganharam contratos em mais municipios com os partidos
 # do governante desses municípios na epoca.
 # Fornecedor x Quantidade de contratos x Porcentagem por partido do governante
-
-# Analise: top 1
-
+# Fornecedor x Montante de contratos x Porcentagem por partido do governante
