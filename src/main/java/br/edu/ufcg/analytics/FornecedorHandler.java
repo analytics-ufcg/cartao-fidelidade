@@ -134,6 +134,6 @@ public class FornecedorHandler {
 								0));  // TODO(danielfireman): get real value when we know what to get.
 			}
 		}
-		return Results.json(results.entrySet());
+		return Results.json(results.values());
 	}
 }
