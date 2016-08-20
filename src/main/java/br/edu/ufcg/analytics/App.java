@@ -1,6 +1,7 @@
 package br.edu.ufcg.analytics;
 
 import org.jooby.Jooby;
+import org.jooby.json.Jackson;
 
 /**
  * Main entry point.
@@ -9,6 +10,9 @@ public class App extends Jooby {
 
   // Routes.
   {
+	// Making JSON no-brainer.
+	use(new Jackson());
+
 	// Frontend assets.
 	assets("/", "index.html");
 	assets("/robots.txt", "robots.txt");
@@ -18,6 +22,9 @@ public class App extends Jooby {
 	assets("/images/**");
 	assets("/scripts/**");
 	assets("/styles/**");
+	
+	// API routes.
+	use(FornecedorHandler.class);
   }
 
   public static void main(final String[] args) throws Throwable {
