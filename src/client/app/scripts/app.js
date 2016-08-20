@@ -26,6 +26,12 @@
       templateUrl: "views/main.html",
       controller: "MainCtrl",
       controllerAs: "main"
+    }).state('overview', {
+      url: "/overview",
+      templateUrl: "views/overview.html",
+      controller: "OverviewCtrl",
+      controllerAs: "ctrl",
+      styleUrls: ["styles/overview.css"]
     });
     $urlRouterProvider.otherwise('/');
   }

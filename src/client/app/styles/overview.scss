@@ -1,0 +1,38 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import "customVariables";
+// bower:scss
+@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
+@import "bootstrapCustom";
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+.header-title {
+  margin-top: 60px;
+  margin-bottom: 60px;
+
+  @media screen and (max-width: $screen-sm) {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.node {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
