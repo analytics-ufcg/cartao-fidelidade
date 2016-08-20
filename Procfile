@@ -1,1 +1,1 @@
-web: java -jar target/cartao-fidelidade-1.0.jar env=prod
+web: java $JAVA_OPTS -jar target/cartao-fidelidade-1.0.jar
