@@ -20,13 +20,22 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container">
+    <div class="container-fluid wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
 
-      <h1 class="header-title text-center">Cartão fidelidade</h1>
-      <h2 class="header-subtitle text-center">Slogam matador pra ficar bem legal</h2>
-      <div ui-view></div>
+            <h1 class="header-title">Cartão fidelidade</h1>
+            <h2 class="header-subtitle">Slogam matador pra ficar bem legal</h2>
+
+          </div>
+        </div>
+      </div>
     </div>
 
+    <div ui-view class="container">
+
+    </div>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID
      <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
