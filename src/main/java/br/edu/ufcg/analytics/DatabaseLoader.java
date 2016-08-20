@@ -21,7 +21,7 @@ public class DatabaseLoader {
 	@PostConstruct
 	public void start() {
 		try (Connection conn = this.ds.getConnection(); Statement stmt = conn.createStatement()) {
-			stmt.executeUpdate("CREATE TABLE FORNECEDORES AS SELECT * FROM CSVREAD('db/fornecedores.csv');");
+			stmt.executeUpdate("CREATE TABLE FORNECEDORES AS SELECT * FROM CSVREAD('public/db/fornecedores.csv');");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
