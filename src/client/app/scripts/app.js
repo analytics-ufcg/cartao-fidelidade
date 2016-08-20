@@ -30,8 +30,7 @@
       url: "/overview",
       templateUrl: "views/overview.html",
       controller: "OverviewCtrl",
-      controllerAs: "ctrl",
-      styleUrls: ["styles/overview.css"]
+      controllerAs: "ctrl"
     });
     $urlRouterProvider.otherwise('/');
   }

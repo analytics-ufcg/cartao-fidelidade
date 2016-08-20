@@ -1,6 +1,9 @@
 <div class="row">
   <div class="col-lg-8 col-lg-offset-2">
 
+    <h3 class="text-center">Fornecedores mais fiéis à partidos ou coligações</h3>
+    <br><br>
+
     <div class="card" ng-repeat="fornecedor in main.fornecedores">
       <div class="card-header">
         <div class="card-title">{{fornecedor.nome}}</div>
@@ -8,7 +11,7 @@
       </div>
       <div class="card-body"></div>
       <div class="card-footer">
-        <cf-linha-partidos></cf-linha-partidos>
+        <cf-linha-partidos dados="fornecedor.fidelidade"></cf-linha-partidos>
       </div>
     </div>
 

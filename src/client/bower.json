@@ -24,6 +24,6 @@
       ]
     }
   },
-  "development" : "http://localhost:5003/api",
-  "production" : "http://web.cloud.lsd.ufcg.edu.br:42160/api"
+  "development" : "http://localhost:8080",
+  "production" : "https://cartao-fidelidade.herokuapp.com"
 }

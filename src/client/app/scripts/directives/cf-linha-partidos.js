@@ -20,29 +20,39 @@
             // Set the dimensions of the canvas / graph
             var margin = {top: 0, right: 0, bottom: 0, left: 0},
                width = 100 - margin.left - margin.right,
-               height = 2 - margin.top - margin.bottom;
-
-            var dataset = [{
-                  data: [{
-                      month: 'Aug',
-                      count: 5
-                  }],
-                  name: 'Series #1'
-              }, {
-                  data: [{
-                      month: 'Aug',
-                      count: 5
-                  }],
-                  name: 'Series #2'
-              }, {
-                  data: [{
-                      month: 'Aug',
-                      count: 5
-                  }],
-                  name: 'Series #3'
-              }
-
-              ],
+               height = 2;
+            var dataset = [];
+            for (var i = 0; i < scope.dados.length; i++) {
+              dataset.push({
+                data: [{
+                  month: 'Aug',
+                  count: scope.dados[i].indice
+                }],
+                name: scope.dados[i].nomePartido
+              });
+            }
+            // var dataset = [
+            //   {
+            //       data: [{
+            //           month: 'Aug',
+            //           count: 653
+            //       }],
+            //       name: 'Series #1'
+            //   }, {
+            //       data: [{
+            //           month: 'Aug',
+            //           count: 742
+            //       }],
+            //       name: 'Series #2'
+            //   }, {
+            //       data: [{
+            //           month: 'Aug',
+            //           count: 500
+            //       }],
+            //       name: 'Series #3'
+            //   }
+            //   ],
+            var
               series = dataset.map(function (d) {
                   return d.name;
               }),
@@ -94,7 +104,8 @@
               yScale = d3.scale.ordinal()
                   .domain(months)
                   .rangeRoundBands([0, height], .1),
-              colours = d3.scale.category10(),
+              colours = d3.scale.ordinal().range(
+                ["#c0392b", "#2980b9", "#f1c40f", "#27ae60", "#7f8c8d"]),
               groups = svg.selectAll('g')
                   .data(dataset)
                   .enter()
@@ -108,11 +119,10 @@
               })
                 .enter()
                 .append('rect')
-                .attr('x', function (d) { return xScale(d.x0); })
-                .attr('y', 0)
-                .attr('height', height)
-                .attr('width', function (d) { return xScale(d.x); });
-
+                  .attr('x', function (d) { return xScale(d.x0); })
+                  .attr('y', 0)
+                  .attr('height', height)
+                  .attr('width', function (d) { return xScale(d.x); });
         }
       }
     }
