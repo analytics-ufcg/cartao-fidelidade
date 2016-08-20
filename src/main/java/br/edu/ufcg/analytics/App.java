@@ -25,6 +25,7 @@ public class App extends Jooby {
 	assets("/images/**");
 	assets("/scripts/**");
 	assets("/styles/**");
+	assets("/views/**");
 	
 	// Database
 	use(new Jdbc("db"));
