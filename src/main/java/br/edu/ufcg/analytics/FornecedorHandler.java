@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.sql.DataSource;
+
 import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.GET;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
+
+import com.google.inject.Inject;
 
 /**
  * All Handlers related to Fornecedor.
@@ -19,6 +23,13 @@ import org.jooby.mvc.Produces;
 @Consumes("application/json")
 @Produces("application/json")
 public class FornecedorHandler {
+	private DataSource ds;
+
+	@Inject
+	public FornecedorHandler(DataSource ds) {
+		this.ds = ds;
+	}
+
 	@Path("/:q")
 	@GET
 	public Result get(String q) {

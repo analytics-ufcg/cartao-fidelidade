@@ -1,6 +1,9 @@
 package br.edu.ufcg.analytics;
 
+import javax.sql.DataSource;
+
 import org.jooby.Jooby;
+import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 
 /**
@@ -23,8 +26,13 @@ public class App extends Jooby {
 	assets("/scripts/**");
 	assets("/styles/**");
 	
+	// Database
+	use(new Jdbc("db"));
+
 	// API routes.
 	use(FornecedorHandler.class);
+	
+	lifeCycle(DatabaseLoader.class);
   }
 
   public static void main(final String[] args) throws Throwable {
