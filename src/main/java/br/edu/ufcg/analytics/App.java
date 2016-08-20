@@ -1,6 +1,7 @@
 package br.edu.ufcg.analytics;
 
 import org.jooby.Jooby;
+import org.jooby.json.Jackson;
 
 /**
  * Main entry point.
@@ -9,6 +10,8 @@ public class App extends Jooby {
 
   // Routes.
   {
+	 use(new Jackson());
+
 	// Frontend assets.
 	assets("/", "index.html");
 	assets("/robots.txt", "robots.txt");
