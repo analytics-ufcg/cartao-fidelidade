@@ -10,7 +10,8 @@ public class App extends Jooby {
 
   // Routes.
   {
-	 use(new Jackson());
+	// Making JSON no-brainer.
+	use(new Jackson());
 
 	// Frontend assets.
 	assets("/", "index.html");
@@ -21,6 +22,9 @@ public class App extends Jooby {
 	assets("/images/**");
 	assets("/scripts/**");
 	assets("/styles/**");
+	
+	// API routes.
+	use(FornecedorHandler.class);
   }
 
   public static void main(final String[] args) throws Throwable {
