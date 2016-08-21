@@ -7,20 +7,26 @@
     <div class="card" ng-repeat="fornecedor in main.fornecedores">
       <div class="card-header">
         <div class="row">
-          <div class="col-xs-10">
+          <div class="col-sm-8">
             <div class="card-title">{{fornecedor.nome}}</div>
-            <div class="card-subtitle">CNPJ {{fornecedor.cnpjCpf}}</div>
+            <div class="card-subtitle">CNPJ {{fornecedor.cpfCnpj}}</div>
           </div>
-          <div class="col-xs-2">
-            <a ui-sref="fornecedor({ cnpjCpf: fornecedor.cnpjCpf })">
+          <div class="col-sm-4">
+            <p>{{fornecedor.numEmpenhos}} empenhos</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-8 col-lg-3 col-lg-offset-9">
+            <a ui-sref="fornecedor({cpfCnpj: fornecedor.cpfCnpj})" class="btn btn-block btn-primary">
               <span class="glyphicon glyphicon-eye-open"></span> Detalhes
             </a>
           </div>
         </div>
+
       </div>
       <div class="card-body"></div>
       <div class="card-footer">
-        <cf-linha-partidos dados="fornecedor.fidelidade"></cf-linha-partidos>
+
       </div>
     </div>
 
