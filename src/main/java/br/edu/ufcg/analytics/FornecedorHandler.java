@@ -61,12 +61,12 @@ public class FornecedorHandler {
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + ANO_MANDATO + " = " + year +
 				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR +
+				  " ORDER BY " + TOTAL_EMPENHOS + " DESC" +
 				  " LIMIT " + LIMIT;
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid ranking function: " + rankingFunction);
 		}
-		System.out.println(sql);
 		List<Fornecedor> results = Lists.newArrayListWithCapacity(LIMIT);
 		try (Connection conn = this.ds.getConnection();
 			 PreparedStatement stmt = conn.prepareStatement(sql);
