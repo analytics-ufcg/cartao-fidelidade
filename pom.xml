@@ -77,9 +77,13 @@
 	  <version>1.0.0.CR7</version>
 	</dependency>
 	<dependency>
-	
+ 		<groupId>org.jooby</groupId>
+ 		<artifactId>jooby-executor</artifactId>
+ 		<version>1.0.0.CR7</version>
+	</dependency>	
 	<!-- JDBC -->
-  	<groupId>org.jooby</groupId>
+	<dependency>
+  		<groupId>org.jooby</groupId>
   		<artifactId>jooby-jdbc</artifactId>
   		<version>1.0.0.CR7</version>
 	</dependency>

@@ -3,6 +3,7 @@ package br.edu.ufcg.analytics;
 import javax.sql.DataSource;
 
 import org.jooby.Jooby;
+import org.jooby.exec.Exec;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 
@@ -26,6 +27,9 @@ public class App extends Jooby {
 	assets("/scripts/**");
 	assets("/styles/**");
 	assets("/views/**");
+	
+	// Executor Service
+	use(new Exec());
 	
 	// Database
 	use(new Jdbc("db"));
