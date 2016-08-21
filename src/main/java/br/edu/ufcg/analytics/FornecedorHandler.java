@@ -31,7 +31,6 @@ public class FornecedorHandler {
 	private static final String NOME_MUNICIPIO = "NOME_MUNICIPIO";
 	private static final String ANO_MANDATO = "ANO_ELEICAO";
 	private static final String QTD_EMPENHOS = "QT_EMPENHOS";
-	private static final String VALOR_EMPENHOS = "VL_EMPENHOS";
 	private static final String TOTAL_EMPENHOS = "TOTAL_EMPENHOS";
 	private static final int LIMIT = 10;
 
@@ -40,10 +39,48 @@ public class FornecedorHandler {
 		this.ds = ds;
 	}
 
-	@Path("fornecedores/:id")
+	@Path("fornecedores/:id/:rankingFunction")
 	@GET
-	public Result get(String id) {
-		return Results.json(new Fornecedor());
+	public Result get(String id, int rankingFunction) throws SQLException {
+		String sql = "";
+		switch (rankingFunction) {
+		case RANKING_FUNCTION_QTD_EMPENHOS:
+			sql = "SELECT " + 
+					CPF_CNPJ + "," +
+					NOME_FORNECEDOR + "," +
+					NOME_MUNICIPIO + "," +
+				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
+				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS +
+				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
+				  " WHERE " + CPF_CNPJ + " = '" + id + "'" +
+				  " GROUP BY " + NOME_MUNICIPIO;
+			break;
+		default:
+			throw new IllegalArgumentException("Invalid ranking function: " + rankingFunction);
+		}
+		System.out.println(sql);
+		Fornecedor fornecedor = null;
+		List<Fidelidade> fidelidades = Lists.newLinkedList();
+		try (Connection conn = this.ds.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			while(rs.next()) {
+				if (fornecedor == null) {
+					fornecedor = new Fornecedor();
+					fornecedor.cpfCnpj = rs.getString(CPF_CNPJ);
+					fornecedor.nome = rs.getString(NOME_FORNECEDOR);
+					fornecedor.numEmpenhos = rs.getInt(TOTAL_EMPENHOS);	
+				}
+				Fidelidade fidelidade = new Fidelidade();
+				fidelidade.municipio = rs.getString(NOME_MUNICIPIO);
+				fidelidade.valor = rs.getDouble("VALOR");
+				fidelidades.add(fidelidade);
+			}
+			if (fornecedor != null) {
+				fornecedor.fidelidade = fidelidades;
+			}
+		}
+		return Results.json(fornecedor);
 	}
 
 	private static final int RANKING_FUNCTION_QTD_EMPENHOS = 1;

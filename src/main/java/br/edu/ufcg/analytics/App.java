@@ -1,7 +1,5 @@
 package br.edu.ufcg.analytics;
 
-import javax.sql.DataSource;
-
 import org.jooby.Jooby;
 import org.jooby.exec.Exec;
 import org.jooby.jdbc.Jdbc;
