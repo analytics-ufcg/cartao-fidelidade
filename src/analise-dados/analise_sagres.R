@@ -15,12 +15,24 @@ ReadDadosEleicoesMunicipais <- function(file, encoding = "latin1") {
 }
 
 ExtraiMunicipioDeUnidadeGestora <- function(municipios, ugestora) {
-  municipios_match <- municipios[which(sapply(municipios,
-                                          function(x) grepl(x, ugestora, fixed = T)))]
-  # Se houver mais de um municipio, pegar o de maior nome
-  municipio <- municipios_match[which.max(nchar(municipios_match))]
-  municipio <- ifelse(length(municipio) == 0, NA, municipio)
-  return(municipio)
+  nome_municipios <- c()
+  for (ug in ugestora) {
+    municipios_match <- municipios[which(sapply(municipios, function(x) grepl(x, ug, fixed = T)))]
+    # Se houver mais de um municipio, pegar o de maior nome
+    municipio <- municipios_match[which.max(nchar(municipios_match))]
+    nome_municipios <- c(nome_municipios, ifelse(length(municipio) == 0, NA, municipio))
+  }
+  return(nome_municipios)
+}
+
+ExtraiCodigoDeNomeDoMunicipio <- function(codigo_municipios, nomes_municipios) {
+  codigos <- c()
+  for (nome in nomes_municipios) {
+    cod <- ifelse(is.na(nome), NA,
+                  codigo_municipios$COD_MUNICIPIO[codigo_municipios$nome_municipio == nome])
+    codigos <- c(codigos, cod)
+  }
+  return(codigos)
 }
 
 DefineAnoEleicaoPrefeito <- function(ano, ano_inicio = 1996, ano_fim = 2020, periodo_anos = 4) {
@@ -49,8 +61,8 @@ tipo_modalidade_licitacao <- tbl(sagres_bd, "tipo_modalidade_licitacao") %>% col
 #write.csv(collect(liquidacao_db, n = Inf), "/tmp/liquidacao.csv", col.names = T, row.names = F)
 
 codigo_municipios <- read.csv("../../dados/codigo_municipios.csv") %>%
-                     select(COD_MUNICIPIO, NOME_MUNICIPIO, NOME_MESO, NOME_MICRO) %>%
-                     rename(nome_municipio = NOME_MUNICIPIO) %>%
+                     select(COD_MUNICIPIO, nome_municipio = NOME_MUNICIPIO) %>%
+                     mutate(nome_municipio = toupper(as.character(nome_municipio))) %>%
                      distinct()
                   
 eleicoes_pb_2008_file <- "../../dados/votacao_candidato_munzona_2008_PB.txt"
@@ -81,9 +93,13 @@ nomes_ugestora <- codigo_ugestora %>%
   summarise(nome_ugestora = toupper(first(de_Ugestora))) %>%
   mutate(COD_MUNICIPIO = as.numeric(substr(cd_Ibge, 1, nchar(cd_Ibge) - 2))) %>%
   left_join(codigo_municipios) %>%
-  mutate(nome_municipio = ifelse(is.na(nome_municipio),
+  ungroup() %>%
+  mutate(nome_municipio = as.character(ifelse(is.na(nome_municipio),
                                  ExtraiMunicipioDeUnidadeGestora(municipios_pb, nome_ugestora),
-                                 toupper(nome_municipio)))
+                                 nome_municipio))) %>%
+  mutate(COD_MUNICIPIO = ifelse(is.na(COD_MUNICIPIO),
+                                ExtraiCodigoDeNomeDoMunicipio(codigo_municipios, nome_municipio),
+                                COD_MUNICIPIO))
 
 empenhos <- empenhos_db %>%
             select(nu_Empenho, tp_Empenho, cd_UGestora, dt_Ano, dt_MesAno, tp_Licitacao,
@@ -97,9 +113,13 @@ empenhos_stats_ugestora <- empenhos %>%
                            left_join(tipo_modalidade_licitacao, by = "tp_Licitacao")
 
 empenhos_stats_municipio <- empenhos_stats_ugestora %>%
-                            group_by(nu_CPFCNPJ, nome_fornecedor, nome_municipio, ano_eleicao) %>%
+                            filter(!is.na(COD_MUNICIPIO)) %>%
+                            group_by(nu_CPFCNPJ, nome_fornecedor, COD_MUNICIPIO, nome_municipio,
+                                     ano_eleicao) %>%
                             summarise(qt_Empenhos = n(), vl_Empenhos = sum(vl_Empenho)) %>%
-                            left_join(res_prefeitos_pb, by = c("nome_municipio", "ano_eleicao"))
+                            left_join(res_prefeitos_pb, by = c("nome_municipio", "ano_eleicao")) %>%
+                            ungroup() %>%
+                            select(-nome_candidato, -nome_municipio)
                             
 write.csv(empenhos_stats_municipio, "../../dados/empenhos_por_municipio.csv", row.names = F)
 
