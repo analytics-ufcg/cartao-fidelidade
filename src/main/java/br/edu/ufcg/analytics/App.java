@@ -2,6 +2,7 @@ package br.edu.ufcg.analytics;
 
 import org.jooby.Jooby;
 import org.jooby.exec.Exec;
+import org.jooby.handlers.CorsHandler;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 
@@ -12,6 +13,8 @@ public class App extends Jooby {
 
   // Routes.
   {
+	use("*", new CorsHandler());
+
 	// Making JSON no-brainer.
 	use(new Jackson());
 
