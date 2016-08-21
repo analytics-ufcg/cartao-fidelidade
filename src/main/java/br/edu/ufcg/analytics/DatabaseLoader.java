@@ -61,9 +61,8 @@ public class DatabaseLoader {
 				"qt_Empenhos INT NOT NULL," +
 				"vl_Empenhos FLOAT NOT NULL," +
 				"nome_candidato VARCHAR NOT NULL," +
-				"sigla_partido VARCHAR NOT NULL); "
-//				+
-//				"COPY EMPENHOS_POR_MUNICIPIO FROM '" + new File("public/db/empenhos_por_municipio.csv").getAbsolutePath() + "' DELIMITER ',' CSV HEADER;"
+				"sigla_partido VARCHAR NOT NULL); " +
+				"\\copy EMPENHOS_POR_MUNICIPIO FROM '" + new File("public/db/empenhos_por_municipio.csv").getAbsolutePath() + "' DELIMITER ',' CSV HEADER;"
 				;
 	}
 
