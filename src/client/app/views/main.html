@@ -1,18 +1,31 @@
 <div class="row">
   <div class="col-lg-8 col-lg-offset-2">
 
-    <h3 class="text-center">Fornecedores mais fiéis à partidos ou coligações</h3>
     <br><br>
+    <h3 class="text-center">Fornecedores mais fiéis a municípios da Paraíba</h3>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
 
+        <select class="form-control">
+          <option value="2008">Legislatura de 2008 à 2012</option>
+          <option value="2012">Legislatura de 2012 à 2016</option>
+        </select>
+
+      </div>
+    </div>
+    </p>
+    <br><br>
     <div class="card" ng-repeat="fornecedor in main.fornecedores">
       <div class="card-header">
         <div class="row">
           <div class="col-sm-8">
             <div class="card-title">{{fornecedor.nome}}</div>
             <div class="card-subtitle">CNPJ {{fornecedor.cpfCnpj}}</div>
+            <div>Localidade da empresa</div>
           </div>
           <div class="col-sm-4">
-            <p>{{fornecedor.numEmpenhos}} empenhos</p>
+            <p class="text-right">{{fornecedor.numEmpenhos}} licitações ganhas</p>
+            <p class="text-right">{{fornecedor.valorEmpenhos | currency:'R$ '}}</p>
           </div>
         </div>
         <div class="row">
