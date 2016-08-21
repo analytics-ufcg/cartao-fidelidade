@@ -41,7 +41,7 @@ public class DatabaseLoader {
 						stmt.executeUpdate(loadProd());
 						CopyManager manager = new CopyManager(conn.unwrap(BaseConnection.class));
 						FileReader fileReader = new FileReader(new File("public/db/empenhos_por_municipio.csv"));
-						manager.copyIn("COPY EMPENHOS_POR_MUNICIPIO FROM STDIN WITH (FORMAT 'csv', DELIMITER ',', HEADER TRUE); ", fileReader);
+						manager.copyIn("COPY EMPENHOS_POR_MUNICIPIO FROM STDIN WITH (FORMAT 'csv', QUOTE '\"', DELIMITER ',', HEADER TRUE); ", fileReader);
 						break;
 					default:
 						stmt.executeUpdate(loadDev());
