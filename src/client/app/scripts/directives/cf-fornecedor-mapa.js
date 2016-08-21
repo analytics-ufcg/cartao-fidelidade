@@ -63,6 +63,8 @@
           function mapaBrasil(br, fornecedor) {
             var brasil = topojson.feature(br, br.objects.municipios);
 
+            var colorScale = d3.scale.category20b();
+
             svg.selectAll(".municipio")
               .data(brasil.features)
             .enter().append("path")
@@ -71,10 +73,8 @@
               .attr("d", path);
 
             for (var i = 0; i < fornecedor.length; i++) {
-              // console.log(svg.selectAll(".municipio-"+fornecedor.municipio));
-              console.log(fornecedor[i].municipio);
               svg.select(".m-"+fornecedor[i].municipio)
-                  .attr("fill", "red");
+                  .attr("fill", colorScale(fornecedor[i].valor));
             }
           }
 
