@@ -28,7 +28,7 @@
       controllerAs: "main"
     })
     .state('fornecedor', {
-      url: "/fornecedor",
+      url: "/fornecedor/:cpfCnpj",
       templateUrl: "views/fornecedor.html",
       controller: "FornecedorCtrl",
       controllerAs: "ctrl"
