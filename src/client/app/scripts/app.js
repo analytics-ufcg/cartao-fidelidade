@@ -26,7 +26,14 @@
       templateUrl: "views/main.html",
       controller: "MainCtrl",
       controllerAs: "main"
-    }).state('overview', {
+    })
+    .state('fornecedor', {
+      url: "/fornecedor",
+      templateUrl: "views/fornecedor.html",
+      controller: "FornecedorCtrl",
+      controllerAs: "ctrl"
+    })
+    .state('overview', {
       url: "/overview",
       templateUrl: "views/overview.html",
       controller: "OverviewCtrl",
