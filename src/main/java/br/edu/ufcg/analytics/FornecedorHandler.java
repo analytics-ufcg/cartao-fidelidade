@@ -93,7 +93,7 @@ public class FornecedorHandler {
 					fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				}
 				Fidelidade fidelidade = new Fidelidade();
-				fidelidade.municipio = rs.getString(NOME_MUNICIPIO).toLowerCase().replace(" ", "");
+				fidelidade.municipio = rs.getString(NOME_MUNICIPIO);
 				fidelidade.valor = rs.getDouble("VALOR");
 				fidelidade.siglaPartido = rs.getString(SIGLA_PARTIDO);
 				fidelidades.add(fidelidade);
