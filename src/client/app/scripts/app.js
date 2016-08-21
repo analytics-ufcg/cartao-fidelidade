@@ -12,7 +12,7 @@
   angular
     .module('cartaoFidelidadeApp', ['ngResource', 'ui.router', 'ui.bootstrap'])
     .constant('RESTAPI', {
-      url: 'http://localhost:8080'
+      url: 'https://cartao-fidelidade.herokuapp.com'
     })
     .config(routeConfig);
 
