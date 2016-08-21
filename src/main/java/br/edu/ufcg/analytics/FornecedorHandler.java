@@ -59,7 +59,7 @@ public class FornecedorHandler {
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + CPF_CNPJ + " = '" + id + "'" +
+				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
 				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
@@ -72,7 +72,7 @@ public class FornecedorHandler {
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + CPF_CNPJ + " = '" + id + "'" +
+				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
 				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 
