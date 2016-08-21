@@ -22,7 +22,7 @@ public class DatabaseLoader {
 	public void start() {
 		try (Connection conn = this.ds.getConnection(); Statement stmt = conn.createStatement()) {
 			conn.setAutoCommit(true);
-			stmt.executeUpdate("CREATE TABLE LICITACOES AS SELECT * FROM CSVREAD('public/db/licitacao_empresa_partido.csv');");
+			stmt.executeUpdate("CREATE TABLE LICITACOES AS SELECT * FROM CSVREAD('public/db/stats_licitacao_fornecedor_partido.csv');");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
