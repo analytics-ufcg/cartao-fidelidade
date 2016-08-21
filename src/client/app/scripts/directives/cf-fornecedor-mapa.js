@@ -15,7 +15,6 @@
           cpfCnpj: '='
         },
         link: function postLink(scope, element) {
-          console.log(scope.cpfCnpj);
           var
             d3 = $window.d3,
             topojson = $window.topojson,
@@ -75,14 +74,12 @@
             .enter().append("path")
               .attr("id", function(d) { return d.id; })
               .attr("class", function(d) {
-                var nome = d.properties.nome.toLowerCase().replace(" ", "").replace("'", "");
-                return "municipio-"+nome;
+                return "municipio-"+d.id;
               })
               .attr("d", path);
 
             for (var i = 0; i < fornecedor.fidelidade.length; i++) {
-              var nome = fornecedor.fidelidade[i].municipio.toLowerCase().replace(" ", "").replace("'", "");
-              svg.select(".municipio-"+nome)
+              svg.select(".municipio-"+fornecedor.fidelidade[i].municipio)
                   .classed(quantize(fornecedor.fidelidade[i].valor), true);
             }
           }
