@@ -23,21 +23,28 @@ ExtraiMunicipioDeUnidadeGestora <- function(municipios, ugestora) {
   return(municipio)
 }
 
-sagres_bd <- src_mysql("SAGRES", "localhost", 3306, password = "123456")
+DefineAnoEleicaoPrefeito <- function(ano, ano_inicio = 1996, ano_fim = 2020, periodo_anos = 4) {
+  anos_eleicoes <- seq(ano_inicio, ano_fim, periodo_anos)
+  ano_eleicao <- sapply(ano, function(x) ifelse(is.na(x), NA,
+                                                anos_eleicoes[which.min(x > anos_eleicoes) - 1]))
+  if (length(ano_eleicao) == 0) {
+    ano_eleicao <- NA
+  }
+  return(ano_eleicao)
+}
 
-# Se der problema de encoding, rodar comando:
-# - dbGetQuery(sagres_bd$con, "set names utf8")
+sagres_bd <- src_mysql("SAGRES", "localhost", 3306, password = "123456")
+dbGetQuery(sagres_bd$con, "set names utf8")
 
 fornecedores <- tbl(sagres_bd, "fornecedores")
 codigo_ugestora <- tbl(sagres_bd, "codigo_ugestora")
-contratos <- tbl(sagres_bd, "contratos")
-tipo_modalidade_licitacao <- tbl(sagres_bd, "tipo_modalidade_licitacao")
+contratos_db <- tbl(sagres_bd, "contratos")
 licitacao_db <- tbl(sagres_bd, "licitacao")
-liquidacao_db <- tbl(sagres_bd, "liquidacao")
 propostas_db <- tbl(sagres_bd, "propostas")
+tipo_modalidade_licitacao <- tbl(sagres_bd, "tipo_modalidade_licitacao") %>% collect(n = Inf)
 
-write.csv(collect(licitacao_db, n = Inf), "/tmp/licitacao.csv", col.names = T, row.names = F)
-write.csv(collect(liquidacao_db, n = Inf), "/tmp/liquidacao.csv", col.names = T, row.names = F)
+#write.csv(collect(licitacao_db, n = Inf), "/tmp/licitacao.csv", col.names = T, row.names = F)
+#write.csv(collect(liquidacao_db, n = Inf), "/tmp/liquidacao.csv", col.names = T, row.names = F)
 
 codigo_municipios <- read.csv("../../dados/codigo_municipios.csv") %>%
                      select(COD_MUNICIPIO, NOME_MUNICIPIO, NOME_MESO, NOME_MICRO) %>%
@@ -77,37 +84,61 @@ propostas <- propostas_db %>%
   filter(st_Proposta == 1, !is.na(nu_CPFCNPJ)) %>%
   select(-cd_Item, -cd_SubGrupoItem, -cd_UGestoraItem, -dt_Ano, -dt_MesAno) %>%
   collect(n = Inf)
+  
+contratos <- contratos_db %>%
+  collect(n = Inf) %>%
+  filter(nu_CPFCNPJ != "", !is.na(nu_CPFCNPJ)) %>%
+  group_by(nu_CPFCNPJ, nu_Licitacao, tp_Licitacao, cd_UGestora) %>%
+  summarise(n_contratos=n(), valor_total_contratos = sum(vl_TotalContrato))
 
 licitacao <- licitacao_db %>%
   filter(!is.na(nu_Propostas)) %>%
   select(-registroCGE) %>%
   collect(n = Inf) %>%
-  #TODO:melhorar essa funcao
-  mutate(ano_eleicao = ifelse(dt_Ano > 2012, 2012, ifelse(dt_Ano > 2008, 2008, NA))) %>%
+  mutate(ano_eleicao = DefineAnoEleicaoPrefeito(dt_Ano)) %>%
   filter(!is.na(ano_eleicao))
-    
-licitacao_stats <- licitacao %>%
-  full_join(propostas, by = c("nu_Licitacao", "tp_Licitacao", "cd_UGestora")) %>%
-  full_join(nomes_ugestora, by = c("cd_UGestora" = "cd_Ugestora")) %>%
-  # Agregando unidades gestoras de um municipio.
-  group_by(COD_MUNICIPIO, nome_municipio, NOME_MESO, NOME_MICRO, ano_eleicao,
-           nu_Licitacao, tp_Licitacao, nu_Propostas, vl_Licitacao, dt_Ano, dt_MesAno,
-           dt_Homologacao, tp_Objeto, de_Obs, tp_regimeExecucao, nu_CPFCNPJ) %>%
+
+licitacao_stats_all_ugestora <- licitacao %>%
+  left_join(propostas, by = c("nu_Licitacao", "tp_Licitacao", "cd_UGestora")) %>%
+  left_join(nomes_ugestora, by = c("cd_UGestora" = "cd_Ugestora")) %>%
+  left_join(nomes_fornecedores, by = "nu_CPFCNPJ") %>%
+  left_join(tipo_modalidade_licitacao, by = "tp_Licitacao") %>%
+  left_join(contratos, by = c("nu_CPFCNPJ", "nu_Licitacao", "tp_Licitacao", "cd_UGestora"))
+
+#TODO: adicionar dados de contratos
+licitacao_stats_all_municipio <- licitacao_stats_all_ugestora %>%
+  group_by(COD_MUNICIPIO, nome_municipio, NOME_MESO, NOME_MICRO, ano_eleicao, nu_Licitacao,
+           tp_Licitacao, de_TipoLicitacao, nu_Propostas, vl_Licitacao, dt_Ano, dt_MesAno,
+           dt_Homologacao, tp_Objeto, de_Obs, tp_regimeExecucao, nu_CPFCNPJ, nome_fornecedor) %>%
   summarise(vl_Ofertado_soma = sum(vl_Ofertado), vl_Ofertado_first = first(vl_Ofertado),
-            qt_Proposta = n()) %>%
+            qt_Ugestora = n()) %>%
   merge(res_prefeitos_pb, by = c("nome_municipio", "ano_eleicao")) %>%
   as_data_frame()
 
-write.csv(licitacao_stats, "../../dados/licitacao_empresa_partido.csv", col.names = T,
+write.csv(licitacao_stats_all_municipio,
+          "../../dados/stats_licitacao_fornecedor_partido.csv", row.names = F)
+
+licitacao_stats_curto <- licitacao_stats_all_municipio %>%
+  select(nome_municipio, ano_eleicao, nu_Licitacao, de_TipoLicitacao, nu_Propostas, vl_Licitacao,
+         dt_MesAno, nu_CPFCNPJ, nome_fornecedor, qt_Ugestora, vl_Ofertado_soma,
+         vl_Ofertado_first)
+
+write.csv(licitacao_stats_curto, "../../dados/stats_licitacao_fornecedor_partido_curto.csv",
           row.names = F)
 
+licitacao_stats_por_partido <- licitacao_stats_all_municipio %>%
+  group_by(ano_eleicao, nu_CPFCNPJ, nome_fornecedor, sigla_partido) %>%
+  summarise(qt_Licitacoes = n(), qt_Ugestora = sum(qt_Ugestora),
+            vl_Ofertado_soma = sum(vl_Ofertado_soma),
+            vl_Ofertado_first = sum(vl_Ofertado_first)) %>%
+  group_by(ano_eleicao, nu_CPFCNPJ, nome_fornecedor) %>%
+  mutate(prop_Licitacoes = qt_Licitacoes / n())
+
 # Codigo antigo abaixo. Pode não funcionar mais.
-contratos_stats <- contratos %>%
-  filter(nu_CPFCNPJ != "") %>%
-  collect(n = Inf) %>%
-  mutate(ano_eleicao = ifelse(dt_Ano > 2012, 2012, ifelse(dt_Ano > 2008, 2008, NA))) %>%
-  group_by(nu_CPFCNPJ, ano_eleicao, cd_UGestora) %>%
-  summarise(n_contratos=n(), valor_contratos = sum(vl_TotalContrato))
+
+licitacao_contratos <- licitacao_stats_all %>%
+  left_join(contratos_stats, by = c("nu_CPFCNPJ", "ano_eleicao", "nu_Licitacao", "tp_Licitacao",
+                                    "cd_UGestora"))
 
 contratos_stats_agg <- contratos_stats %>%
   group_by(nu_CPFCNPJ, ano_eleicao) %>%
