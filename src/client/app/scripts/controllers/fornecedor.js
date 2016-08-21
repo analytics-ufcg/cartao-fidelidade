@@ -10,7 +10,8 @@
   function FornecedorCtrl(Fornecedores, $stateParams) {
     var vm = this;
     vm.fornecedor = {};
+    vm.cpfCnpj = $stateParams.cpfCnpj;
 
-    vm.fornecedor = Fornecedores.simples.get({"cpfCnpj": $stateParams.cpfCnpj, "tipo": 1});
+    vm.fornecedor = Fornecedores.simples.get({"cpfCnpj": vm.cpfCnpj, "ano": 2008, "tipo": 1});
   }
 })();

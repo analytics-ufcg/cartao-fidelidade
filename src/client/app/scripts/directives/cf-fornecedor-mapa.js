@@ -4,7 +4,7 @@
   angular.module('cartaoFidelidadeApp')
     .directive('cfFornecedorMapa', cfFornecedorMapa);
 
-    cfFornecedorMapa.$inject = ['$window','RESTAPI'];
+    cfFornecedorMapa.$inject = ['$window', 'RESTAPI'];
 
     /*jshint latedef: nofunc */
     function cfFornecedorMapa($window, RESTAPI) {
@@ -12,9 +12,10 @@
         template: '',
         restrict: 'E',
         scope: {
-          dados: '='
+          cpfCnpj: '='
         },
         link: function postLink(scope, element) {
+          console.log(scope.cpfCnpj);
           var
             d3 = $window.d3,
             topojson = $window.topojson,
@@ -65,22 +66,30 @@
 
             var colorScale = d3.scale.category20b();
 
+            var quantize = d3.scale.quantize()
+              .domain([0, 1000])
+              .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
             svg.selectAll(".municipio")
               .data(brasil.features)
             .enter().append("path")
               .attr("id", function(d) { return d.id; })
-              .attr("class", function(d) { return "m-"+d.id; })
+              .attr("class", function(d) {
+                var nome = d.properties.nome.toLowerCase().replace(" ", "").replace("'", "");
+                return "municipio-"+nome;
+              })
               .attr("d", path);
 
-            for (var i = 0; i < fornecedor.length; i++) {
-              svg.select(".m-"+fornecedor[i].municipio)
-                  .attr("fill", colorScale(fornecedor[i].valor));
+            for (var i = 0; i < fornecedor.fidelidade.length; i++) {
+              var nome = fornecedor.fidelidade[i].municipio.toLowerCase().replace(" ", "").replace("'", "");
+              svg.select(".municipio-"+nome)
+                  .classed(quantize(fornecedor.fidelidade[i].valor), true);
             }
           }
 
           d3.queue()
             .defer(d3.json, 'scripts/municipios.json')
-            .defer(d3.json, 'scripts/fornecedor.json')
+            .defer(d3.json, RESTAPI.url+'/fornecedores/'+scope.cpfCnpj+'/2008/1')
             .await(desenhaMapa);
 
           function desenhaMapa(error, br, fornecedor) {

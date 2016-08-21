@@ -10,7 +10,7 @@
   function fornecedores(RESTAPI, $resource) {
     var resource = {
       ranked: $resource(RESTAPI.url+'/ranked/fornecedores/:ano/:tipo'),
-      simples: $resource(RESTAPI.url+'/fornecedores/:cpfCnpj/:tipo')
+      simples: $resource(RESTAPI.url+'/fornecedores/:cpfCnpj/:ano/:tipo')
     };
     return resource;
   }
