@@ -56,11 +56,11 @@ public class FornecedorHandler {
 					NOME_MUNICIPIO + "," +
 					SIGLA_PARTIDO + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS +
+				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + CPF_CNPJ + " = '" + id + "'" +
-				  " GROUP BY " + NOME_MUNICIPIO;
+				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
 			sql = "SELECT " + 
@@ -73,7 +73,7 @@ public class FornecedorHandler {
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + CPF_CNPJ + " = '" + id + "'" +
-				  " GROUP BY " + NOME_MUNICIPIO;
+				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 
 		default:
@@ -93,7 +93,7 @@ public class FornecedorHandler {
 					fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				}
 				Fidelidade fidelidade = new Fidelidade();
-				fidelidade.municipio = rs.getString(NOME_MUNICIPIO);
+				fidelidade.municipio = rs.getString(NOME_MUNICIPIO).toLowerCase().replace(" ", "");
 				fidelidade.valor = rs.getDouble("VALOR");
 				fidelidade.siglaPartido = rs.getString(SIGLA_PARTIDO);
 				fidelidades.add(fidelidade);
