@@ -28,7 +28,7 @@ public class FornecedorHandler {
 	private static final String TBL_EMPENHOS_POR_MUNICIO = "EMPENHOS_POR_MUNICIPIO";
 	private static final String CPF_CNPJ = "NU_CPFCNPJ";
 	private static final String NOME_FORNECEDOR = "NOME_FORNECEDOR";
-	private static final String NOME_MUNICIPIO = "NOME_MUNICIPIO";
+	private static final String COD_MUNICIPIO = "COD_MUNICIPIO";
 	private static final String ANO_MANDATO = "ANO_ELEICAO";
 	private static final String QTD_EMPENHOS = "QT_EMPENHOS";
 	private static final String VALOR_EMPENHOS = "VL_EMPENHOS";
@@ -53,27 +53,27 @@ public class FornecedorHandler {
 			sql = "SELECT " + 
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
-					NOME_MUNICIPIO + "," +
+					COD_MUNICIPIO + "," +
 					SIGLA_PARTIDO + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
+				  " GROUP BY " + COD_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
 			sql = "SELECT " + 
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
-					NOME_MUNICIPIO + "," +
+					COD_MUNICIPIO + "," +
 					SIGLA_PARTIDO + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + NOME_MUNICIPIO + "," + SIGLA_PARTIDO;
+				  " GROUP BY " + COD_MUNICIPIO + "," + SIGLA_PARTIDO;
 			break;
 
 		default:
@@ -93,7 +93,7 @@ public class FornecedorHandler {
 					fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				}
 				Fidelidade fidelidade = new Fidelidade();
-				fidelidade.municipio = rs.getString(NOME_MUNICIPIO);
+				fidelidade.municipio = rs.getString(COD_MUNICIPIO);
 				fidelidade.valor = rs.getDouble("VALOR");
 				fidelidade.siglaPartido = rs.getString(SIGLA_PARTIDO);
 				fidelidades.add(fidelidade);

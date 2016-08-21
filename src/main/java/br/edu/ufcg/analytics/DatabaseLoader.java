@@ -1,6 +1,7 @@
 package br.edu.ufcg.analytics;
 
 import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.concurrent.ExecutorService;
@@ -9,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.jooby.Env;
+import org.postgresql.copy.CopyManager;
+import org.postgresql.core.BaseConnection;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,6 +39,9 @@ public class DatabaseLoader {
 					switch (env.name()) {
 					case "prod":
 						stmt.executeUpdate(loadProd());
+						CopyManager manager = new CopyManager(conn.unwrap(BaseConnection.class));
+						FileReader fileReader = new FileReader(new File("public/db/empenhos_por_municipio.csv"));
+						manager.copyIn("COPY EMPENHOS_POR_MUNICIPIO FROM STDIN WITH (FORMAT 'csv', DELIMITER ',', HEADER TRUE); ", fileReader);
 						break;
 					default:
 						stmt.executeUpdate(loadDev());
@@ -56,25 +62,21 @@ public class DatabaseLoader {
 				"CREATE TABLE EMPENHOS_POR_MUNICIPIO (" +
 				"nu_CPFCNPJ VARCHAR NOT NULL," +
 				"nome_fornecedor VARCHAR NOT NULL," +
-				"nome_municipio VARCHAR NOT NULL," +
+				"cod_municipio VARCHAR NOT NULL," +
 				"ano_eleicao INT NOT NULL,"+
 				"qt_Empenhos INT NOT NULL," +
 				"vl_Empenhos FLOAT NOT NULL," +
-				"nome_candidato VARCHAR NOT NULL," +
-				"sigla_partido VARCHAR NOT NULL); " +
-				"\\copy EMPENHOS_POR_MUNICIPIO FROM '" + new File("public/db/empenhos_por_municipio.csv").getAbsolutePath() + "' DELIMITER ',' CSV HEADER;"
-				;
+				"sigla_partido VARCHAR NOT NULL); ";
 	}
 
 	private String loadDev() {
 		return "CREATE TABLE EMPENHOS_POR_MUNICIPIO (" +
 				"nu_CPFCNPJ VARCHAR NOT NULL," +
 				"nome_fornecedor VARCHAR NOT NULL," +
-				"nome_municipio VARCHAR NOT NULL," +
+				"cod_municipio VARCHAR NOT NULL," +
 				"ano_eleicao INT NOT NULL,"+
 				"qt_Empenhos INT NOT NULL," +
 				"vl_Empenhos FLOAT NOT NULL," +
-				"nome_candidato VARCHAR NOT NULL," +
 				"sigla_partido VARCHAR NOT NULL) " +
 				"AS SELECT * FROM CSVREAD('public/db/empenhos_por_municipio.csv');";
 	}
