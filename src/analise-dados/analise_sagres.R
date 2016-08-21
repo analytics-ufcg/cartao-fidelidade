@@ -116,14 +116,14 @@ licitacao_stats_all_municipio <- licitacao_stats_all_ugestora %>%
   as_data_frame()
 
 write.csv(licitacao_stats_all_municipio,
-          "../../dados/stats_licitacao_fornecedor_partido.csv", row.names = F)
+          "../../dados/stats_licitacao_fornecedor_partido_completo.csv", row.names = F)
 
 licitacao_stats_curto <- licitacao_stats_all_municipio %>%
   select(nome_municipio, ano_eleicao, nu_Licitacao, de_TipoLicitacao, nu_Propostas, vl_Licitacao,
          dt_MesAno, nu_CPFCNPJ, nome_fornecedor, qt_Ugestora, vl_Ofertado_soma,
          vl_Ofertado_first)
 
-write.csv(licitacao_stats_curto, "../../dados/stats_licitacao_fornecedor_partido_curto.csv",
+write.csv(licitacao_stats_curto, "../../dados/stats_licitacao_fornecedor_partido.csv",
           row.names = F)
 
 licitacao_stats_por_partido <- licitacao_stats_all_municipio %>%
