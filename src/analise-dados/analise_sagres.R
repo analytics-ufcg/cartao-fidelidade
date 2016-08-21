@@ -57,8 +57,9 @@ empenhos_db <- tbl(sagres_bd, "empenhos")
 credores_db <- tbl(sagres_bd, "credores")
 tipo_modalidade_licitacao <- tbl(sagres_bd, "tipo_modalidade_licitacao") %>% collect(n = Inf)
 
-#write.csv(collect(licitacao_db, n = Inf), "/tmp/licitacao.csv", col.names = T, row.names = F)
-#write.csv(collect(liquidacao_db, n = Inf), "/tmp/liquidacao.csv", col.names = T, row.names = F)
+municipio_fornecedores <- read.csv("../../dados/mrg_all.csv", sep = ";", encoding = "utf8") %>%
+  filter(estado == "PB", !is.na(ibge)) %>%
+  select(cnpj, codigo_municipio_fornecedor = ibge)
 
 codigo_municipios <- read.csv("../../dados/codigo_municipios.csv") %>%
                      select(COD_MUNICIPIO, nome_municipio = NOME_MUNICIPIO) %>%
@@ -85,7 +86,8 @@ municipios_pb <- unique(res_prefeitos_pb$nome_municipio)
 nomes_fornecedores <- fornecedores %>%
   collect(n = Inf) %>%
   group_by(nu_CPFCNPJ) %>%
-  summarise(nome_fornecedor = trimws(first(no_Fornecedor)))
+  summarise(nome_fornecedor = trimws(first(no_Fornecedor))) %>%
+  left_join(municipio_fornecedores, by = c("nu_CPFCNPJ" = "cnpj"))
   
 nomes_ugestora <- codigo_ugestora %>%
   collect(n = Inf) %>%
@@ -114,8 +116,8 @@ empenhos_stats_ugestora <- empenhos %>%
 
 empenhos_stats_municipio <- empenhos_stats_ugestora %>%
                             filter(!is.na(COD_MUNICIPIO)) %>%
-                            group_by(nu_CPFCNPJ, nome_fornecedor, COD_MUNICIPIO, nome_municipio,
-                                     ano_eleicao) %>%
+                            group_by(nu_CPFCNPJ, nome_fornecedor, codigo_municipio_fornecedor,
+                                     COD_MUNICIPIO, nome_municipio, ano_eleicao) %>%
                             summarise(qt_Empenhos = n(), vl_Empenhos = sum(vl_Empenho)) %>%
                             left_join(res_prefeitos_pb, by = c("nome_municipio", "ano_eleicao")) %>%
                             ungroup() %>%
