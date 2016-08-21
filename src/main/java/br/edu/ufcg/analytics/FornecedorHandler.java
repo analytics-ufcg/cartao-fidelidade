@@ -33,6 +33,7 @@ public class FornecedorHandler {
 	private static final String QTD_EMPENHOS = "QT_EMPENHOS";
 	private static final String VALOR_EMPENHOS = "VL_EMPENHOS";
 	private static final String SIGLA_PARTIDO = "SIGLA_PARTIDO";
+	private static final String COD_MUNICIPIO_FORNECEDOR = "CODIGO_MUNICIPIO_FORNECEDOR";
 	private static final String TOTAL_EMPENHOS = "TOTAL_EMPENHOS";
 	private static final String TOTAL_VALOR_EMPENHOS = "TOTAL_VALOR_EMPENHOS";
 	private static final int LIMIT = 10;
@@ -55,6 +56,7 @@ public class FornecedorHandler {
 					NOME_FORNECEDOR + "," +
 					COD_MUNICIPIO + "," +
 					SIGLA_PARTIDO + "," +
+					COD_MUNICIPIO_FORNECEDOR + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
@@ -68,6 +70,7 @@ public class FornecedorHandler {
 					NOME_FORNECEDOR + "," +
 					COD_MUNICIPIO + "," +
 					SIGLA_PARTIDO + "," +
+					COD_MUNICIPIO_FORNECEDOR + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
@@ -114,11 +117,12 @@ public class FornecedorHandler {
 			sql = "SELECT " + 
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
+					COD_MUNICIPIO_FORNECEDOR + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR +
+				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR + "," + COD_MUNICIPIO_FORNECEDOR +
 				  " ORDER BY " + TOTAL_EMPENHOS + " DESC" +
 				  " LIMIT " + LIMIT;
 			break;
@@ -126,11 +130,12 @@ public class FornecedorHandler {
 			sql = "SELECT " + 
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
+					COD_MUNICIPIO_FORNECEDOR + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
 				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
 				  " WHERE " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR +
+				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR + "," + COD_MUNICIPIO_FORNECEDOR +
 				  " ORDER BY " + TOTAL_VALOR_EMPENHOS + " DESC" +
 				  " LIMIT " + LIMIT;
 			break;
@@ -147,6 +152,7 @@ public class FornecedorHandler {
 				fornecedor.nome = rs.getString(NOME_FORNECEDOR);
 				fornecedor.numEmpenhos = rs.getInt(TOTAL_EMPENHOS);
 				fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
+				fornecedor.codMunicipio = rs.getString(COD_MUNICIPIO_FORNECEDOR);
 				results.add(fornecedor);
 			}
 		}
