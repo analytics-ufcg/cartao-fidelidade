@@ -10,6 +10,11 @@
           <option value="2008">Legislatura de 2008 à 2012</option>
           <option value="2012">Legislatura de 2012 à 2016</option>
         </select>
+        <br>
+        <select class="form-control" ng-model="main.tipo" ng-change="main.getFornecedores()">
+          <option value="1">Mais licitações ganhas</option>
+          <option value="2">Maior valor total de licitações ganhas</option>
+        </select>
 
       </div>
     </div>

@@ -12,11 +12,12 @@
     vm.fornecedores = [];
     vm.getFornecedores = getFornecedores;
     vm.ano = "2008";
+    vm.tipo = "1";
 
-    vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": 1});
+    vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": vm.tipo});
 
     function getFornecedores() {
-      vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": 1});
+      vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": vm.tipo});
     }
   }
 })();
