@@ -37,7 +37,7 @@ public class App extends Jooby {
 
 	// API routes.
 	use(FornecedorHandler.class);
-	
+
 	lifeCycle(DatabaseLoader.class);
   }
 
