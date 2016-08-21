@@ -10,7 +10,13 @@
   function MainCtrl(Fornecedores) {
     var vm = this;
     vm.fornecedores = [];
-    
-    vm.fornecedores = Fornecedores.ranked.query({"ano": "2008", "tipo": 1});
+    vm.getFornecedores = getFornecedores;
+    vm.ano = "2008";
+
+    vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": 1});
+
+    function getFornecedores() {
+      vm.fornecedores = Fornecedores.ranked.query({"ano": vm.ano, "tipo": 1});
+    }
   }
 })();
