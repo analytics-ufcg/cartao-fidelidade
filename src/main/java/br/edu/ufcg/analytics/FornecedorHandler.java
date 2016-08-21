@@ -32,6 +32,7 @@ public class FornecedorHandler {
 	private static final String ANO_MANDATO = "ANO_ELEICAO";
 	private static final String QTD_EMPENHOS = "QT_EMPENHOS";
 	private static final String VALOR_EMPENHOS = "VL_EMPENHOS";
+	private static final String SIGLA_PARTIDO = "SIGLA_PARTIDO";
 	private static final String TOTAL_EMPENHOS = "TOTAL_EMPENHOS";
 	private static final String TOTAL_VALOR_EMPENHOS = "TOTAL_VALOR_EMPENHOS";
 	private static final int LIMIT = 10;
@@ -53,6 +54,7 @@ public class FornecedorHandler {
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
 					NOME_MUNICIPIO + "," +
+					SIGLA_PARTIDO + "," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
@@ -65,6 +67,7 @@ public class FornecedorHandler {
 					CPF_CNPJ + "," +
 					NOME_FORNECEDOR + "," +
 					NOME_MUNICIPIO + "," +
+					SIGLA_PARTIDO + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS VALOR," +
 				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
 				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
@@ -92,6 +95,7 @@ public class FornecedorHandler {
 				Fidelidade fidelidade = new Fidelidade();
 				fidelidade.municipio = rs.getString(NOME_MUNICIPIO);
 				fidelidade.valor = rs.getDouble("VALOR");
+				fidelidade.siglaPartido = rs.getString(SIGLA_PARTIDO);
 				fidelidades.add(fidelidade);
 			}
 			if (fornecedor != null) {
