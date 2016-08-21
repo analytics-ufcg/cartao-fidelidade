@@ -60,24 +60,32 @@
             features.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
           }
 
-          function mapaBrasil(br) {
+          function mapaBrasil(br, fornecedor) {
             var brasil = topojson.feature(br, br.objects.municipios);
 
             svg.selectAll(".municipio")
               .data(brasil.features)
             .enter().append("path")
               .attr("id", function(d) { return d.id; })
-              .attr("class", function(d) { return "municipio-" + d.id; })
+              .attr("class", function(d) { return "m-"+d.id; })
               .attr("d", path);
+
+            for (var i = 0; i < fornecedor.length; i++) {
+              // console.log(svg.selectAll(".municipio-"+fornecedor.municipio));
+              console.log(fornecedor[i].municipio);
+              svg.select(".m-"+fornecedor[i].municipio)
+                  .attr("fill", "red");
+            }
           }
 
           d3.queue()
             .defer(d3.json, 'scripts/municipios.json')
+            .defer(d3.json, 'scripts/fornecedor.json')
             .await(desenhaMapa);
 
-          function desenhaMapa(error, br, sab, reserv) {
+          function desenhaMapa(error, br, fornecedor) {
             if (error) { return console.error(error); }
-            mapaBrasil(br);
+            mapaBrasil(br, fornecedor);
           }
         }
       };
