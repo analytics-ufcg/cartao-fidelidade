@@ -56,7 +56,7 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   credores_db <- tbl(sagres_db, "credores")
   tipo_modalidade_licitacao <- tbl(sagres_db, "tipo_modalidade_licitacao") %>% collect(n = Inf)
   
-  municipio_fornecedores <- read.csv("../../dados/mrg_all.csv", sep = ";", encoding = "utf8") %>%
+  municipio_fornecedores <- read.csv("../../dados/cnpj_cep_endereco_pb.csv", sep = ";", encoding = "utf8") %>%
     filter(estado == "PB", !is.na(ibge)) %>%
     select(cnpj, codigo_municipio_fornecedor = ibge) %>%
     distinct()
