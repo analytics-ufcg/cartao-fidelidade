@@ -41,7 +41,7 @@ public class DatabaseLoader {
 						stmt.executeUpdate(loadProd());
 						CopyManager manager = new CopyManager(conn.unwrap(BaseConnection.class));
 						FileReader fileReader = new FileReader(new File("public/db/empenhos_por_municipio.csv"));
-						manager.copyIn("COPY EMPENHOS_POR_MUNICIPIO FROM STDIN WITH (FORMAT 'csv', DELIMITER ',', HEADER TRUE); ", fileReader);
+						manager.copyIn("COPY EMPENHOS_POR_MUNICIPIO FROM STDIN WITH (FORMAT 'csv', QUOTE '\"', DELIMITER ',', HEADER TRUE); ", fileReader);
 						break;
 					default:
 						stmt.executeUpdate(loadDev());
@@ -62,6 +62,7 @@ public class DatabaseLoader {
 				"CREATE TABLE EMPENHOS_POR_MUNICIPIO (" +
 				"nu_CPFCNPJ VARCHAR NOT NULL," +
 				"nome_fornecedor VARCHAR NOT NULL," +
+				"codigo_municipio_fornecedor VARCHAR NOT NULL," +
 				"cod_municipio VARCHAR NOT NULL," +
 				"ano_eleicao INT NOT NULL,"+
 				"qt_Empenhos INT NOT NULL," +
@@ -73,6 +74,7 @@ public class DatabaseLoader {
 		return "CREATE TABLE EMPENHOS_POR_MUNICIPIO (" +
 				"nu_CPFCNPJ VARCHAR NOT NULL," +
 				"nome_fornecedor VARCHAR NOT NULL," +
+				"codigo_municipio_fornecedor VARCHAR NOT NULL," +
 				"cod_municipio VARCHAR NOT NULL," +
 				"ano_eleicao INT NOT NULL,"+
 				"qt_Empenhos INT NOT NULL," +

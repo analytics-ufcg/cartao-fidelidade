@@ -11,4 +11,5 @@ public class Fornecedor {
 	public int numEmpenhos;
 	public double valorEmpenhos;
 	public List<Fidelidade> fidelidade;
+	public String codMunicipio;
 }

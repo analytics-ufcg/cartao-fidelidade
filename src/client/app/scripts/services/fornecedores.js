@@ -8,6 +8,10 @@
 
   /*jshint latedef: nofunc */
   function fornecedores(RESTAPI, $resource) {
-    return $resource(RESTAPI.url+'/fornecedores/:id');
+    var resource = {
+      ranked: $resource(RESTAPI.url+'/ranked/fornecedores/:ano/:tipo'),
+      simples: $resource(RESTAPI.url+'/fornecedores/:cpfCnpj/:ano/:tipo')
+    };
+    return resource;
   }
 })();
