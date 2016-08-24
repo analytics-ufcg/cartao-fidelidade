@@ -23,53 +23,6 @@ ReadDadosEleicoesMunicipais <- function(file, encoding = "latin1") {
                          "total_votos"))
 }
 
-ReadDadosDoacoesCampanha <- function(file, encoding = "latin1") {
-  receitas_partido <- read.csv("../../dados/receitas_candidatos_2012_PB.txt",
-                               sep = ";", dec = ",", encoding = "latin1", header = T) %>%
-    select(sigla_partido = Sigla..Partido, nu_CPFCNPJ = CPF.CNPJ.do.doador,
-           valor_receita = Valor.receita) %>%
-    mutate(valor_receita = as.numeric(valor_receita),
-           nu_CPFCNPJ = as.character(nu_CPFCNPJ), ano_eleicao = 2012)
-  
-  receitas_partido <- read.csv("../../dados/receitas_comites_2012_PB.txt",
-                               sep = ";", dec = ",", encoding = "latin1", header = T) %>%
-    select(sigla_partido = Sigla..Partido, nu_CPFCNPJ = CPF.CNPJ.do.doador,
-           valor_receita = Valor.receita) %>%
-    mutate(valor_receita = as.numeric(valor_receita), nu_CPFCNPJ = as.character(nu_CPFCNPJ),
-           ano_eleicao = 2012) %>%
-    bind_rows(receitas_partido)
-  
-  receitas_partido <- read.csv("../../dados/receitas_partidos_2012_PB.txt", stringsAsFactors = F,
-                               sep = ";", dec = ",", encoding = "latin1", header = T) %>%
-    select(sigla_partido = Sigla..Partido, nu_CPFCNPJ = CPF.CNPJ.do.doador,
-           valor_receita = Valor.receita) %>%
-    mutate(valor_receita = as.numeric(valor_receita), nu_CPFCNPJ = as.character(nu_CPFCNPJ),
-           ano_eleicao = 2012) %>%
-    bind_rows(receitas_partido)
-  
-  receitas_partido <- read.csv("../../dados/receitas_candidatos_2008_PB.csv",
-                               sep = ";", dec = ",", encoding = "latin1", header = T) %>%
-    select(sigla_partido = SG_PARTIDO, nu_CPFCNPJ = CD_CPF_CNPJ_DOADOR,
-           valor_receita = VR_RECEITA) %>%
-    mutate(valor_receita = as.numeric(valor_receita),
-           nu_CPFCNPJ = as.character(nu_CPFCNPJ), ano_eleicao = 2008) %>%
-    bind_rows(receitas_partido)
-  
-  receitas_partido <- read.csv("../../dados/receitas_comites_2008_PB.csv",
-                               sep = ";", dec = ",", encoding = "latin1", header = T) %>%
-    select(sigla_partido = SG_PARTIDO, nu_CPFCNPJ = CD_CPF_CNPJ_DOADOR,
-           valor_receita = VR_RECEITA) %>%
-    mutate(valor_receita = as.numeric(valor_receita),
-           nu_CPFCNPJ = as.character(nu_CPFCNPJ), ano_eleicao = 2008) %>%
-    bind_rows(receitas_partido)
-  
-  receitas_partido <- receitas_partido %>%
-    group_by(ano_eleicao, sigla_partido, nu_CPFCNPJ) %>%
-    summarise(valor_doado = sum(valor_receita))
-  
-  return(receitas_partido)
-}
-
 DefineAnoEleicaoPrefeito <- function(ano, ano_inicio = 1996, ano_fim = 2020, periodo_anos = 4) {
   anos_eleicoes <- seq(ano_inicio, ano_fim, periodo_anos)
   ano_eleicao <- sapply(ano, function(x) ifelse(is.na(x), NA,
@@ -102,8 +55,6 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   empenhos_db <- tbl(sagres_db, "empenhos")
   credores_db <- tbl(sagres_db, "credores")
   tipo_modalidade_licitacao <- tbl(sagres_db, "tipo_modalidade_licitacao") %>% collect(n = Inf)
-  
-  receitas_partido <- ReadDadosDoacoesCampanha()
   
   municipio_fornecedores <- read.csv("../../dados/mrg_all.csv", sep = ";", encoding = "utf8") %>%
     filter(estado == "PB", !is.na(ibge)) %>%
