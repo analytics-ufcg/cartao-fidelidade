@@ -8,3 +8,5 @@ src/client/.tmp/
 src/client/bower_components/
 src/client/node_modules/
 .DS_Store
+stderr.log
+stdout.log
