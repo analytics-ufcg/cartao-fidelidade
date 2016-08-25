@@ -51,6 +51,13 @@ public class FornecedorHandler {
 		this.ds = ds;
 	}
 
+	@Path("fornecedores/:state/:id/:year/:rankingFunction")
+	@GET
+	public Result getPorEstado(String state, String id, int rankingFunction, int year) throws SQLException {
+		return get(id, rankingFunction, year);
+	}
+
+	// TODO(danielfireman): Remove this route when the UI transition to the new URL format.
 	@Path("fornecedores/:id/:year/:rankingFunction")
 	@GET
 	public Result get(String id, int rankingFunction, int year) throws SQLException {
