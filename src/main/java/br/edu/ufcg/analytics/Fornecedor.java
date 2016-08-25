@@ -1,6 +1,7 @@
 package br.edu.ufcg.analytics;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * "Fornecedor" entity data holder.
@@ -12,4 +13,5 @@ public class Fornecedor {
 	public double valorEmpenhos;
 	public List<Fidelidade> fidelidade;
 	public String codMunicipio;
+	public List<Map.Entry<String, Double>> resumoPartidos;
 }
