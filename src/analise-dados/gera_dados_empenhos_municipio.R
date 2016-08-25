@@ -57,8 +57,8 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   
   municipio_fornecedores <- read.csv("../../dados/cnpj_cep_endereco_pb.csv", sep = ";", encoding = "utf8") %>%
     filter(estado == "PB", !is.na(ibge), ibge != "null") %>%
-    select(cnpj, codigo_municipio_fornecedor = ibge) %>%
-    distinct()
+    group_by(cnpj) %>%
+    summarise(codigo_municipio_fornecedor = first(ibge))
   
   codigo_municipios <- read.csv("../../dados/codigo_municipios.csv") %>%
     select(COD_MUNICIPIO, nome_municipio = NOME_MUNICIPIO) %>%
