@@ -124,7 +124,6 @@ public class FornecedorHandler {
 		fornecedor.resumoPartidos = partidos.entrySet()
 				.stream()
 				.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
-				.limit(MAX_PARTIES)
 				.collect(Collectors.toList());
 		return Results.json(fornecedor);
 	}
