@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -15,7 +19,9 @@ import org.jooby.mvc.GET;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -84,6 +90,8 @@ public class FornecedorHandler {
 		}
 		Fornecedor fornecedor = null;
 		List<Fidelidade> fidelidades = Lists.newLinkedList();
+		Map<String, Double> partidos = Maps.newHashMap();
+		double valorTotal = 0;
 		try (Connection conn = this.ds.getConnection();
 			 PreparedStatement stmt = conn.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
@@ -95,16 +103,29 @@ public class FornecedorHandler {
 					fornecedor.numEmpenhos = rs.getInt(TOTAL_EMPENHOS);	
 					fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				}
+				String partido = rs.getString(SIGLA_PARTIDO);
+				double valor = rs.getDouble("VALOR");
+				valorTotal += valor;
+
 				Fidelidade fidelidade = new Fidelidade();
 				fidelidade.municipio = rs.getString(COD_MUNICIPIO);
-				fidelidade.valor = rs.getDouble("VALOR");
-				fidelidade.siglaPartido = rs.getString(SIGLA_PARTIDO);
+				fidelidade.valor = valor;
+				fidelidade.siglaPartido = partido;
 				fidelidades.add(fidelidade);
+
+				Double valorPorPartido = partidos.containsKey(partido) ? partidos.get(partido) : 0.0;
+				partidos.put(partido, valorPorPartido + valor);
 			}
 			if (fornecedor != null) {
 				fornecedor.fidelidade = fidelidades;
 			}
 		}
+		// Sorting party values in descending order of their total values.
+		fornecedor.resumoPartidos = partidos.entrySet()
+				.stream()
+				.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
+				.limit(MAX_PARTIES)
+				.collect(Collectors.toList());
 		return Results.json(fornecedor);
 	}
 	
