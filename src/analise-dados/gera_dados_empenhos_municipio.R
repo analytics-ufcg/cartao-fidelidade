@@ -38,14 +38,13 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   if (tolower(db_tool) == "mysql") {
     require(RMySQL)
     sagres_db <- src_mysql(dbname = db_name, host = db_host, port = db_port, user = db_user,
-                           password = db_password)  
+                           password = db_password)
+    dbGetQuery(sagres_db$con, "set names utf8")
   } else {
     require(RPostgreSQL)
     sagres_db <- src_postgres(dbname = db_name, host = db_host, port = db_port, user = db_user,
                            password = db_password)
   }
-  
-  dbGetQuery(sagres_db$con, "set names utf8")
   
   fornecedores <- tbl(sagres_db, "fornecedores")
   codigo_ugestora <- tbl(sagres_db, "codigo_ugestora")
