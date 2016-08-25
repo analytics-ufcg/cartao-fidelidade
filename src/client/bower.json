@@ -28,5 +28,5 @@
     }
   },
   "development": "http://localhost:8080",
-  "production": "https://cartao-fidelidade.herokuapp.com"
+  "production": "http://web.cloud.lsd.ufcg.edu.br:44158"
 }

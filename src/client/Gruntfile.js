@@ -169,7 +169,13 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-            '<%= yeoman.dist %>/{,*/}*',
+            '<%= yeoman.dist %>/{,*/}*.html',
+            '<%= yeoman.dist %>/{,*/}*.ico',
+            '<%= yeoman.dist %>/{,*/}*.txt',
+            '<%= yeoman.dist %>/bower_components/',
+            '<%= yeoman.dist %>/images/',
+            '<%= yeoman.dist %>/scripts/',
+            '<%= yeoman.dist %>/styles/',
             '!<%= yeoman.dist %>/.git{,*/}*'
           ]
         }]
@@ -469,7 +475,7 @@ module.exports = function (grunt) {
     'string-replace': {
       dist: {
         files: {
-          'dist/scripts/': 'dist/scripts/*.js'
+          '<%= yeoman.dist %>/scripts/': '<%= yeoman.dist %>/scripts/*.js'
         },
         options: {
           replacements: [{
@@ -526,7 +532,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'string-replace'
   ]);
 
   grunt.registerTask('default', [
