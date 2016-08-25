@@ -98,21 +98,21 @@ public class FornecedorHandler {
 		Fornecedor fornecedor = null;
 		List<Fidelidade> fidelidades = Lists.newLinkedList();
 		Map<String, Double> partidos = Maps.newHashMap();
-		double valorTotal = 0;
 		try (Connection conn = this.ds.getConnection();
 			 PreparedStatement stmt = conn.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
+			int numEmpenhos = 0;	
+			double valorEmpenhos = 0.0;
 			while(rs.next()) {
 				if (fornecedor == null) {
 					fornecedor = new Fornecedor();
 					fornecedor.cpfCnpj = rs.getString(CPF_CNPJ);
 					fornecedor.nome = rs.getString(NOME_FORNECEDOR);
-					fornecedor.numEmpenhos = rs.getInt(TOTAL_EMPENHOS);	
-					fornecedor.valorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				}
+				numEmpenhos += rs.getInt(TOTAL_EMPENHOS);	
+				valorEmpenhos += rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				String partido = rs.getString(SIGLA_PARTIDO);
 				double valor = rs.getDouble("VALOR");
-				valorTotal += valor;
 
 				Fidelidade fidelidade = new Fidelidade();
 				fidelidade.municipio = rs.getString(COD_MUNICIPIO);
@@ -125,13 +125,15 @@ public class FornecedorHandler {
 			}
 			if (fornecedor != null) {
 				fornecedor.fidelidade = fidelidades;
+				fornecedor.numEmpenhos = numEmpenhos;	
+				fornecedor.valorEmpenhos = valorEmpenhos;
+				fornecedor.resumoPartidos = partidos.entrySet()
+						.stream()
+						.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
+						.collect(Collectors.toList());
+
 			}
 		}
-		// Sorting party values in descending order of their total values.
-		fornecedor.resumoPartidos = partidos.entrySet()
-				.stream()
-				.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
-				.collect(Collectors.toList());
 		return Results.json(fornecedor);
 	}
 	
