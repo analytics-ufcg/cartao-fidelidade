@@ -86,7 +86,7 @@
 
           d3.queue()
             .defer(d3.json, 'scripts/municipios.json')
-            .defer(d3.json, RESTAPI.url+'/fornecedores/'+scope.cpfCnpj+'/2008/1')
+            .defer(d3.json, RESTAPI.url+'/fornecedores/pb/'+scope.cpfCnpj+'/2008/1')
             .await(desenhaMapa);
 
           function desenhaMapa(error, br, fornecedor) {
