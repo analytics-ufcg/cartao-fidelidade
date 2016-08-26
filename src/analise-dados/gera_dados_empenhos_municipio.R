@@ -56,9 +56,9 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   tipo_modalidade_licitacao <- tbl(sagres_db, "tipo_modalidade_licitacao") %>% collect(n = Inf)
   
   municipio_fornecedores <- read.csv("../../dados/cnpj_cep_endereco_pb.csv", sep = ";", encoding = "utf8") %>%
-    filter(estado == "PB", !is.na(ibge)) %>%
-    select(cnpj, codigo_municipio_fornecedor = ibge) %>%
-    distinct()
+    filter(estado == "PB", !is.na(ibge), ibge != "null") %>%
+    group_by(cnpj) %>%
+    summarise(codigo_municipio_fornecedor = first(ibge))
   
   codigo_municipios <- read.csv("../../dados/codigo_municipios.csv") %>%
     select(COD_MUNICIPIO, nome_municipio = NOME_MUNICIPIO) %>%
@@ -70,7 +70,8 @@ GeraDadosEmpenhosPorMunicipio <- function(db_host, db_port, db_user = NULL, db_p
   
   res_prefeitos_pb <- ReadDadosEleicoesMunicipais(eleicoes_pb_2008_file) %>%
     bind_rows(ReadDadosEleicoesMunicipais(eleicoes_pb_2012_file)) %>%
-    filter(descricao_cargo == "PREFEITO", desc_sit_cand_tot == "ELEITO") %>%
+    filter(descricao_cargo == "PREFEITO", desc_sit_cand_tot == "ELEITO",
+           descricao_eleicao %in% c("ELEIÇÕES 2008", "ELEIÇÃO MUNICIPAL 2012")) %>%
     group_by(ano_eleicao, nome_municipio, nome_candidato, sigla_partido) %>%
     distinct()
   
