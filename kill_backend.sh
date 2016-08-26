@@ -1,1 +1,1 @@
-sudo kill -9 `ps aux | grep cartao-fidelidade | tail -n 1 | cut -f4 -d" "`
+sudo kill -9 `ps aux | grep -e java -e cartao-fidelidade | grep -v grep | awk '{ print $2 }'`
