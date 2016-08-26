@@ -93,7 +93,7 @@ public class FornecedorHandler {
 		try (Connection conn = this.ds.getConnection();
 			 PreparedStatement stmt = conn.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
-			int numEmpenhos = 0;	
+			int numEmpenhos = 0;
 			double valorEmpenhos = 0.0;
 			while(rs.next()) {
 				if (fornecedor == null) {
@@ -101,7 +101,7 @@ public class FornecedorHandler {
 					fornecedor.cpfCnpj = rs.getString(CPF_CNPJ);
 					fornecedor.nome = rs.getString(NOME_FORNECEDOR);
 				}
-				numEmpenhos += rs.getInt(TOTAL_EMPENHOS);	
+				numEmpenhos += rs.getInt(TOTAL_EMPENHOS);
 				valorEmpenhos += rs.getDouble(TOTAL_VALOR_EMPENHOS);
 				String partido = rs.getString(SIGLA_PARTIDO);
 				double valor = rs.getDouble("VALOR");
@@ -117,7 +117,7 @@ public class FornecedorHandler {
 			}
 			if (fornecedor != null) {
 				fornecedor.fidelidade = fidelidades;
-				fornecedor.numEmpenhos = numEmpenhos;	
+				fornecedor.numEmpenhos = numEmpenhos;
 				fornecedor.valorEmpenhos = valorEmpenhos;
 				fornecedor.resumoPartidos = partidos.entrySet()
 						.stream()
@@ -127,7 +127,7 @@ public class FornecedorHandler {
 		}
 		return Results.json(fornecedor);
 	}
-	
+
 	@Path("ranked/fornecedores/:year/:rankingFunction")
 	@GET
 	public Result list(int year, int rankingFunction) throws SQLException {
@@ -136,8 +136,8 @@ public class FornecedorHandler {
 		case RANKING_FUNCTION_QTD_EMPENHOS:
 			sql = new SelectBuilder()
 				.column(CPF_CNPJ, true /* group by */)
-				.column(NOME_FORNECEDOR, true /* group by */)
-				.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+				.column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+				.column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
 				.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
 				.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
 				.from(TBL_EMPENHOS_POR_MUNICIO)
@@ -149,8 +149,8 @@ public class FornecedorHandler {
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
 			sql = new SelectBuilder()
 			.column(CPF_CNPJ, true /* group by */)
-			.column(NOME_FORNECEDOR, true /* group by */)
-			.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+			.column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+			.column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
 			.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
 			.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
 			.from(TBL_EMPENHOS_POR_MUNICIO)
