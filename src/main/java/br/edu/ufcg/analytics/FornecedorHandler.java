@@ -4,10 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
@@ -19,10 +17,11 @@ import org.jooby.mvc.GET;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+
+import ca.krasnay.sqlbuilder.SelectBuilder;
 
 /**
  * All Handlers related to Fornecedor.
@@ -54,42 +53,35 @@ public class FornecedorHandler {
 	@Path("fornecedores/:state/:id/:year/:rankingFunction")
 	@GET
 	public Result getPorEstado(String state, String id, int rankingFunction, int year) throws SQLException {
-		return get(id, rankingFunction, year);
-	}
-
-	// TODO(danielfireman): Remove this route when the UI transition to the new URL format.
-	@Path("fornecedores/:id/:year/:rankingFunction")
-	@GET
-	public Result get(String id, int rankingFunction, int year) throws SQLException {
 		String sql = "";
 		switch (rankingFunction) {
 		case RANKING_FUNCTION_QTD_EMPENHOS:
-			sql = "SELECT " + 
-					CPF_CNPJ + "," +
-					NOME_FORNECEDOR + "," +
-					COD_MUNICIPIO + "," +
-					SIGLA_PARTIDO + "," +
-					COD_MUNICIPIO_FORNECEDOR + "," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS VALOR," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
-				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
-				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + COD_MUNICIPIO + "," + SIGLA_PARTIDO+ "," + CPF_CNPJ+ "," + NOME_FORNECEDOR+ "," + COD_MUNICIPIO_FORNECEDOR;
+			sql = new SelectBuilder()
+				.column(CPF_CNPJ, true /* group by */)
+				.column(NOME_FORNECEDOR, true /* group by */)
+				.column(COD_MUNICIPIO, true /* group by */)
+				.column(SIGLA_PARTIDO, true /* group by */)
+				.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+				.column("SUM(" + QTD_EMPENHOS + ") AS VALOR")
+				.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+				.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+				.where(CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year)
+				.from(TBL_EMPENHOS_POR_MUNICIO)
+				.toString();
 			break;
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
-			sql = "SELECT " + 
-					CPF_CNPJ + "," +
-					NOME_FORNECEDOR + "," +
-					COD_MUNICIPIO + "," +
-					SIGLA_PARTIDO + "," +
-					COD_MUNICIPIO_FORNECEDOR + "," +
-				  	"SUM(" + VALOR_EMPENHOS + ") AS VALOR," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
-				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
-				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + COD_MUNICIPIO + "," + SIGLA_PARTIDO+ "," + CPF_CNPJ+ "," + NOME_FORNECEDOR+ "," + COD_MUNICIPIO_FORNECEDOR;
+			sql = new SelectBuilder()
+				.column(CPF_CNPJ, true /* group by */)
+				.column(NOME_FORNECEDOR, true /* group by */)
+				.column(COD_MUNICIPIO, true /* group by */)
+				.column(SIGLA_PARTIDO, true /* group by */)
+				.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+				.column("SUM(" + VALOR_EMPENHOS + ") AS VALOR")
+				.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+				.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+				.from(TBL_EMPENHOS_POR_MUNICIO)
+				.where(CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year)
+				.toString();
 			break;
 
 		default:
@@ -131,7 +123,6 @@ public class FornecedorHandler {
 						.stream()
 						.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
 						.collect(Collectors.toList());
-
 			}
 		}
 		return Results.json(fornecedor);
@@ -143,30 +134,31 @@ public class FornecedorHandler {
 		String sql = "";
 		switch (rankingFunction) {
 		case RANKING_FUNCTION_QTD_EMPENHOS:
-			sql = "SELECT " + 
-					CPF_CNPJ + "," +
-					NOME_FORNECEDOR + "," +
-					COD_MUNICIPIO_FORNECEDOR + "," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
-				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
-				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR + "," + COD_MUNICIPIO_FORNECEDOR +
-				  " ORDER BY " + TOTAL_EMPENHOS + " DESC" +
-				  " LIMIT " + LIMIT;
+			sql = new SelectBuilder()
+				.column(CPF_CNPJ, true /* group by */)
+				.column(NOME_FORNECEDOR, true /* group by */)
+				.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+				.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+				.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+				.from(TBL_EMPENHOS_POR_MUNICIO)
+				.where(ANO_MANDATO + " = " + year)
+				.orderBy(TOTAL_EMPENHOS, false /* descending */)
+				.toString() +
+				" LIMIT " + LIMIT;
 			break;
 		case RANKING_FUNCTION_VALOR_EMPENHOS:
-			sql = "SELECT " + 
-					CPF_CNPJ + "," +
-					NOME_FORNECEDOR + "," +
-					COD_MUNICIPIO_FORNECEDOR + "," +
-				  	"SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS + "," +
-				  	"SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS +
-				  " FROM " + TBL_EMPENHOS_POR_MUNICIO +
-				  " WHERE " + ANO_MANDATO + " = " + year +
-				  " GROUP BY " + CPF_CNPJ + "," + NOME_FORNECEDOR + "," + COD_MUNICIPIO_FORNECEDOR +
-				  " ORDER BY " + TOTAL_VALOR_EMPENHOS + " DESC" +
-				  " LIMIT " + LIMIT;
+			sql = new SelectBuilder()
+			.column(CPF_CNPJ, true /* group by */)
+			.column(NOME_FORNECEDOR, true /* group by */)
+			.column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+			.column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+			.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+			.from(TBL_EMPENHOS_POR_MUNICIO)
+			.where(ANO_MANDATO + " = " + year)
+			.orderBy(TOTAL_VALOR_EMPENHOS, false /* descending */)
+			.toString() +
+			" LIMIT " + LIMIT;
+
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid ranking function: " + rankingFunction);
