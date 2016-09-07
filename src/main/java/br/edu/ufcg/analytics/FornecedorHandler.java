@@ -197,7 +197,7 @@ public class FornecedorHandler {
 			.column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
 			.from(TBL_EMPENHOS_POR_MUNICIO)
 			.where(ANO_MANDATO + " = " + year)
-			.where(COD_MUNICIPIO + " = " + codMunicipio)
+			.where(COD_MUNICIPIO + " = \"" + codMunicipio + "\"")
 			.orderBy(TOTAL_VALOR_EMPENHOS, false /* descending */)
 			.toString() +
 			" LIMIT " + LIMIT;
