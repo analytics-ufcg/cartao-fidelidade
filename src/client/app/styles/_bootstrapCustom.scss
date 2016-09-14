@@ -1,0 +1,215 @@
+.nav {
+  &.navbar-nav {
+    transition: all 1s;
+    opacity: 1;
+    visibility: visible;
+  }
+  &.navbar-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+// Common form controls
+//
+// Shared size and type resets for form controls. Apply `.form-control` to any
+// of the following form controls:
+//
+// select
+// textarea
+// input[type="text"]
+// input[type="password"]
+// input[type="datetime"]
+// input[type="datetime-local"]
+// input[type="date"]
+// input[type="month"]
+// input[type="time"]
+// input[type="week"]
+// input[type="number"]
+// input[type="email"]
+// input[type="url"]
+// input[type="search"]
+// input[type="tel"]
+// input[type="color"]
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: $padding-base-vertical $padding-base-horizontal;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background: transparent;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 2px solid $input-border;
+  border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+
+  // Customize the `:focus` state to imitate native WebKit styles.
+  @include form-control-focus;
+
+  // Placeholder
+  @include placeholder;
+
+  // Unstyle the caret on `<select>`s in IE10+.
+  &::-ms-expand {
+    border: 0;
+    background-color: transparent;
+  }
+
+  // Disabled and read-only inputs
+  //
+  // HTML5 says that controls under a fieldset > legend:first-child won't be
+  // disabled if the fieldset is disabled. Due to implementation difficulty, we
+  // don't honor that edge case; we style them as disabled anyway.
+  &[disabled],
+  &[readonly],
+  fieldset[disabled] & {
+    background-color: $input-bg-disabled;
+    opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+  }
+
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: $cursor-disabled;
+  }
+
+  // [converter] extracted textarea& to textarea.form-control
+}
+
+.help-block {
+  font-size: 12px;
+}
+
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Base styles
+// --------------------------------------------------
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  font-weight: $btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 2px solid transparent;
+  white-space: nowrap;
+  @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $btn-border-radius-base);
+  @include user-select(none);
+
+  &:hover,
+  &:focus,
+  &.focus {
+    color: $btn-default-color;
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: $cursor-disabled;
+    @include opacity(.65);
+    @include box-shadow(none);
+  }
+
+  // [converter] extracted a& to a.btn
+}
+
+// Prevent double borders when buttons are next to each other
+.btn-group {
+  .btn + .btn,
+  .btn + .btn-group,
+  .btn-group + .btn,
+  .btn-group + .btn-group {
+    margin-left: -2px;
+  }
+}
+
+// Button input groups
+// -------------------------
+.input-group-btn {
+  position: relative;
+  // Jankily prevent input button groups from wrapping with `white-space` and
+  // `font-size` in combination with `inline-block` on buttons.
+  font-size: 0;
+  white-space: nowrap;
+
+  // Negative margin for spacing, position for bringing hovered/focused/actived
+  // element above the siblings.
+  > .btn {
+    position: relative;
+    + .btn {
+      margin-left: -2px;
+    }
+    // Bring the "active" button to the front
+    &:hover,
+    &:focus,
+    &:active {
+      z-index: 2;
+    }
+  }
+
+  // Negative margin to only have a 1px border between the two
+  &:first-child {
+    > .btn,
+    > .btn-group {
+      margin-right: -2px;
+    }
+  }
+  &:last-child {
+    > .btn,
+    > .btn-group {
+      z-index: 2;
+      margin-left: -2px;
+    }
+  }
+}
+
+// Alternate buttons
+// --------------------------------------------------
+
+.btn-inverse {
+  &.btn-default {
+    @include button-variant($btn-default-color, transparent, $btn-default-border);
+    color: $btn-default-border;
+  }
+  &.btn-primary {
+    @include button-variant($btn-primary-color, transparent, $btn-primary-border);
+    color: $btn-primary-border;
+  }
+  // Success appears as green
+  &.btn-success {
+    @include button-variant($btn-success-color, transparent, $btn-success-border);
+    color: $btn-success-border;
+  }
+  // Info appears as blue-green
+  &.btn-info {
+    @include button-variant($btn-info-color, transparent, $btn-info-border);
+    color: $btn-info-border;
+  }
+  // Warning appears as orange
+  &.btn-warning {
+    @include button-variant($btn-warning-color, transparent, $btn-warning-border);
+    color: $btn-warning-border;
+  }
+  // Danger and error appear as red
+  &.btn-danger {
+    @include button-variant($btn-danger-color, transparent, $btn-danger-border);
+    color: $btn-danger-border;
+  }
+}

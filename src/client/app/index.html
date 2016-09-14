@@ -13,6 +13,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <!-- endbuild -->
   </head>
   <body ng-app="cartaoFidelidadeApp">
@@ -20,17 +21,10 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container-fluid wrapper">
-      <div class="container">
-        <a ui-sref="home">
-          <div class="logo" ng-include="'images/logo.svg'"></div>
-        </a>
-      </div>
-    </div>
+    <cf-navbar scroll-position="scroll"></cf-navbar>
 
-    <div ui-view class="container">
+    <div ui-view></div>
 
-    </div>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID
      <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -64,6 +58,7 @@
         <script src="scripts/controllers/fornecedor.js"></script>
         <script src="scripts/controllers/overview.js"></script>
         <script src="scripts/services/fornecedores.js"></script>
+        <script src="scripts/directives/cf-navbar.js"></script>
         <script src="scripts/directives/overview-treemap.js"></script>
         <script src="scripts/directives/cf-linha-partidos.js"></script>
         <script src="scripts/directives/cf-fornecedor-plot.js"></script>

@@ -10,6 +10,11 @@ body {
   background-color: #ebeff1;
 }
 
+@mixin default-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
 .logo {
 
   width: 100px;
@@ -37,8 +42,36 @@ body {
 }
 
 .wrapper {
-  background-color: $brand-primary;
+  background-color: $navbar-inverse-bg;
   color: #fff;
+}
+
+.text-wrapper {
+  @include default-text;
+}
+
+.text-body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+.main-header {
+  height: 100vh;
+  padding-top: 260px;
+  @media screen and (max-width: $screen-sm) {
+    padding-top: $padding-large-vertical*3;
+  }
+}
+
+.main-header-subheadding {
+  @include default-text;
+  margin-top: $padding-large-vertical;
+  margin-bottom: $padding-large-vertical;
+}
+
+.search-box {
+  margin-top: $padding-large-vertical*3;
+  margin-bottom: $padding-large-vertical*3;
 }
 
 .card {
