@@ -33,6 +33,10 @@
       controller: "FornecedorCtrl",
       controllerAs: "ctrl"
     })
+    .state('about', {
+      url: "/sobre",
+      templateUrl: "views/about.html"
+    })
     .state('overview', {
       url: "/overview",
       templateUrl: "views/overview.html",
