@@ -115,7 +115,6 @@ public class FornecedorHandler {
             if (fornecedor != null) {
                 fornecedor.totalNumEmpenhos = totalNumEmpenhos;
                 fornecedor.totalValorEmpenhos = totalValorEmpenhos;
-
                 switch (rankingFunction) {
                     case RANKING_FUNCTION_QTD_EMPENHOS:
                         fornecedor.partidos = partidos.values().stream()
@@ -187,5 +186,103 @@ public class FornecedorHandler {
             }
         }
         return Results.json(results);
+    }
+
+    @Path("ranked/fornecedores/:year/:rankingFunction")
+    @GET
+    public Result listFornecedores(int year, int rankingFunction) throws SQLException {
+        String sql = "";
+        switch (rankingFunction) {
+            case RANKING_FUNCTION_QTD_EMPENHOS:
+                sql = new SelectBuilder()
+                        .column(CPF_CNPJ, true /* group by */)
+                        .column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+                        .column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
+                        .column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+                        .column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+                        .from(TBL_EMPENHOS_POR_MUNICIO)
+                        .where(ANO_MANDATO + " = " + year)
+                        .orderBy(TOTAL_EMPENHOS, false /* descending */)
+                        .toString() +
+                        " LIMIT " + LIMIT;
+                break;
+            case RANKING_FUNCTION_VALOR_EMPENHOS:
+                sql = new SelectBuilder()
+                        .column(CPF_CNPJ, true /* group by */)
+                        .column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+                        .column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
+                        .column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+                        .column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+                        .from(TBL_EMPENHOS_POR_MUNICIO)
+                        .where(ANO_MANDATO + " = " + year)
+                        .orderBy(TOTAL_VALOR_EMPENHOS, false /* descending */)
+                        .toString() +
+                        " LIMIT " + LIMIT;
+
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid ranking function: " + rankingFunction);
+        }
+        List<Fornecedor> results = listFornecedoresFromQuery(sql);
+        return Results.json(results);
+    }
+
+    @Path("ranked/fornecedores/:year/:rankingFunction/:codMunicipio")
+    @GET
+    public Result listFornecedoresMunicipio(int year, int rankingFunction, String codMunicipio) throws SQLException {
+        String sql = "";
+        switch (rankingFunction) {
+            case RANKING_FUNCTION_QTD_EMPENHOS:
+                sql = new SelectBuilder()
+                        .column(CPF_CNPJ, true /* group by */)
+                        .column(COD_MUNICIPIO, true /* group by */)
+                        .column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+                        .column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
+                        .column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+                        .column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+                        .from(TBL_EMPENHOS_POR_MUNICIO)
+                        .where(ANO_MANDATO + " = " + year)
+                        .where(COD_MUNICIPIO + " = '" + codMunicipio + "'")
+                        .orderBy(TOTAL_EMPENHOS, false /* descending */)
+                        .toString();
+                break;
+            case RANKING_FUNCTION_VALOR_EMPENHOS:
+                sql = new SelectBuilder()
+                        .column(CPF_CNPJ, true /* group by */)
+                        .column(COD_MUNICIPIO, true /* group by */)
+                        .column("MIN(" + NOME_FORNECEDOR + ") AS " + NOME_FORNECEDOR)
+                        .column("MIN(" + COD_MUNICIPIO_FORNECEDOR + ") AS " + COD_MUNICIPIO_FORNECEDOR)
+                        .column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
+                        .column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
+                        .from(TBL_EMPENHOS_POR_MUNICIO)
+                        .where(ANO_MANDATO + " = " + year)
+                        .where(COD_MUNICIPIO + " = '" + codMunicipio + "'")
+                        .orderBy(TOTAL_VALOR_EMPENHOS, false /* descending */)
+                        .toString();
+
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid ranking function: " + rankingFunction);
+        }
+        List<Fornecedor> results = listFornecedoresFromQuery(sql);
+        return Results.json(results);
+    }
+
+    private List<Fornecedor> listFornecedoresFromQuery(String sql) throws SQLException {
+        List<Fornecedor> results = Lists.newArrayListWithCapacity(LIMIT);
+        try (Connection conn = this.ds.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Fornecedor fornecedor = new Fornecedor();
+                fornecedor.cpfCnpj = rs.getString(CPF_CNPJ);
+                fornecedor.nome = rs.getString(NOME_FORNECEDOR);
+                fornecedor.totalNumEmpenhos = rs.getInt(TOTAL_EMPENHOS);
+                fornecedor.totalValorEmpenhos = rs.getDouble(TOTAL_VALOR_EMPENHOS);
+                fornecedor.codMunicipio = rs.getString(COD_MUNICIPIO_FORNECEDOR);
+                results.add(fornecedor);
+            }
+        }
+        return results;
     }
 }
