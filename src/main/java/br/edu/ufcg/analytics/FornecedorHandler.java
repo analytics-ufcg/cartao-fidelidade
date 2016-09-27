@@ -31,9 +31,11 @@ import java.util.stream.Collectors;
 @Produces("application/json")
 public class FornecedorHandler {
     private static final String TBL_EMPENHOS_POR_MUNICIO = "EMPENHOS_POR_MUNICIPIO";
+    private static final String TBL_MUNICIPIOS = "MUNICIPIOS";
     private static final String CPF_CNPJ = "NU_CPFCNPJ";
     private static final String NOME_FORNECEDOR = "NOME_FORNECEDOR";
     private static final String COD_MUNICIPIO = "COD_MUNICIPIO";
+    private static final String NOME_MUNICIPIO = "NOME_MUNICIPIO";
     private static final String ANO_MANDATO = "ANO_ELEICAO";
     private static final String QTD_EMPENHOS = "QT_EMPENHOS";
     private static final String VALOR_EMPENHOS = "VL_EMPENHOS";
@@ -62,13 +64,15 @@ public class FornecedorHandler {
         String sql = new SelectBuilder()
                 .column(CPF_CNPJ, true /* group by */)
                 .column(NOME_FORNECEDOR, true /* group by */)
-                .column(COD_MUNICIPIO, true /* group by */)
+                .column("epm." + COD_MUNICIPIO, true /* group by */)
                 .column(SIGLA_PARTIDO, true /* group by */)
                 .column(COD_MUNICIPIO_FORNECEDOR, true /* group by */)
+                .column("m." + NOME_MUNICIPIO, false /* group by */)
                 .column("SUM(" + QTD_EMPENHOS + ") AS " + TOTAL_EMPENHOS)
                 .column("SUM(" + VALOR_EMPENHOS + ") AS " + TOTAL_VALOR_EMPENHOS)
                 .where(CPF_CNPJ + " = '" + id + "' AND " + ANO_MANDATO + " = " + year)
-                .from(TBL_EMPENHOS_POR_MUNICIO)
+                .from(TBL_EMPENHOS_POR_MUNICIO + " as epm")
+                .join(TBL_MUNICIPIOS + " as m ON epm." + COD_MUNICIPIO + " = m." + COD_MUNICIPIO)
                 .toString();
         Fornecedor fornecedor = null;
         Map<String, Fornecedor.Partido> partidos = Maps.newHashMap();
@@ -107,6 +111,7 @@ public class FornecedorHandler {
                     municipio = new Fornecedor.Municipio();
                     municipio.codMunicipio = codMunicipio;
                     municipio.siglaPartido = siglaPartido;
+                    municipio.nomeMunicipio = rs.getString(NOME_MUNICIPIO);
                     municipios.put(codMunicipio, municipio);
                 }
                 municipio.valorEmpenhos += valorEmpenhos;

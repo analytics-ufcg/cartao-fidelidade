@@ -45,6 +45,11 @@ public class DatabaseLoader {
 								"vl_Empenhos FLOAT NOT NULL," +
 								"sigla_partido VARCHAR NOT NULL) " +
 								"AS SELECT * FROM CSVREAD('dados/empenhos_por_municipio.csv');");
+						stmt.executeUpdate(
+								"CREATE TABLE MUNICIPIOS (" +
+								"COD_MUNICIPIO INT NOT NULL CONSTRAINT cod_pk PRIMARY KEY," +
+								"NOME_MUNICIPIO VARCHAR NOT NULL)" +
+								"AS SELECT * FROM CSVREAD('dados/dados_municipios.csv');");
 						break;
 					}
 				} catch (Exception e) {

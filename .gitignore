@@ -12,3 +12,4 @@ stderr.log
 stdout.log
 .idea/
 cartao-fidelidade.iml
+.Rproj.user

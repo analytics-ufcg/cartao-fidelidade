@@ -15,6 +15,7 @@ public class Fornecedor {
     public List<Municipio> municipios;
     public static class Municipio {
         public String codMunicipio;
+        public String nomeMunicipio;
         public double valorEmpenhos;
         public int numEmpenhos;
         public String siglaPartido;
