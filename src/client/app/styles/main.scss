@@ -7,7 +7,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #ebeff1;
+  background-color: $body-bg;
+  margin-top: $navbar-height;
 }
 
 @mixin default-text {
@@ -99,10 +100,8 @@ body {
   margin-bottom: (-1*$padding-large-vertical)-5;
 }
 
-form {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+.text-strong {
+  font-size: 1.6em;
 }
 
 .node {

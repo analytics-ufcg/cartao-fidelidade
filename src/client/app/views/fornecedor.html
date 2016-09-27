@@ -1,4 +1,7 @@
-<h3>{{ctrl.fornecedor.nome}}</h3>
-<p>CPF/CNPJ: {{ctrl.fornecedor.cpfCnpj}}</p>
-<br><br>
-<cf-fornecedor-mapa cpf-cnpj="ctrl.cpfCnpj"></cf-fornecedor-mapa>
+<div class="container">
+  <h3>{{ctrl.fornecedor.nome}}</h3>
+  <p>CPF/CNPJ: {{ctrl.fornecedor.cpfCnpj}}</p>
+  <p class="text-center"><span class="text-strong">{{ctrl.fornecedor.totalNumEmpenhos}}</span> licitações ganhas no total de <span class="text-strong">{{ctrl.fornecedor.totalValorEmpenhos | currency:'R$ '}}</span></p>
+  <br><br>
+  <cf-fornecedor-mapa cpf-cnpj="ctrl.cpfCnpj"></cf-fornecedor-mapa>
+</div>

@@ -6,21 +6,25 @@
 
       <div class="row search-box">
         <div class="col-sm-6 col-sm-offset-3">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="CPF/CNPJ...">
-            <span class="input-group-btn">
-              <button class="btn btn-primary" type="button">Pesquisar</button>
-            </span>
-          </div>
-          <p class="help-block text-left">
-            Não sabe o CNPJ? Pesquise na <a href="http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao2.asp">Receita Federal</a>
-          </p>
+          <form ng-submit="main.search()" novalidate>
+
+            <div class="input-group">
+              <input type="text" class="form-control form-control-static" placeholder="CPF/CNPJ..." ng-model="main.cpfCnpj">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Pesquisar</button>
+              </span>
+            </div>
+            <p class="help-block text-left">
+              Não sabe o CNPJ? Pesquise na <a href="http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao2.asp">Receita Federal</a>
+            </p>
+
+          </form>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm-2 col-sm-offset-5">
-          <button class="btn btn-primary btn-inverse btn-block">Ranking</button>
+          <button class="btn btn-primary btn-inverse btn-block" ng-click="main.gotoBottom()">Ranking</button>
         </div>
       </div>
 
@@ -29,9 +33,11 @@
     <!-- <a ui-sref="home">
       <div class="logo" ng-include="'images/logo.svg'"></div>
     </a> -->
+
   </div>
 
 </div>
+<a id="ranking"></a>
 <div class="container">
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2">
@@ -63,8 +69,8 @@
               <div class="card-subtitle">CNPJ {{fornecedor.cpfCnpj}}</div>
             </div>
             <div class="col-sm-4">
-              <p class="text-right">{{fornecedor.numEmpenhos}} licitações ganhas</p>
-              <p class="text-right">{{fornecedor.valorEmpenhos | currency:'R$ '}}</p>
+              <p class="text-right">{{fornecedor.totalNumEmpenhos}} licitações ganhas</p>
+              <p class="text-right">{{fornecedor.totalValorEmpenhos | currency:'R$ '}}</p>
             </div>
           </div>
           <div class="row">

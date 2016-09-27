@@ -78,15 +78,15 @@
               })
               .attr("d", path);
 
-            for (var i = 0; i < fornecedor.fidelidade.length; i++) {
-              svg.select(".municipio-"+fornecedor.fidelidade[i].municipio)
-                  .classed(quantize(fornecedor.fidelidade[i].valor), true);
+            for (var i = 0; i < fornecedor.municipios.length; i++) {
+              svg.select(".municipio-"+fornecedor.municipios[i].codMunicipio)
+                  .classed(quantize(fornecedor.municipios[i].numEmpenhos), true);
             }
           }
 
           d3.queue()
             .defer(d3.json, 'scripts/municipios.json')
-            .defer(d3.json, RESTAPI.url+'/fornecedores/'+scope.cpfCnpj+'/2008/1')
+            .defer(d3.json, RESTAPI.url+'/fornecedores/pb/'+scope.cpfCnpj+'/2008/1')
             .await(desenhaMapa);
 
           function desenhaMapa(error, br, fornecedor) {
