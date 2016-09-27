@@ -6,5 +6,6 @@ package br.edu.ufcg.analytics;
 public class Fidelidade {
 	public String municipio;
 	public double valor;
+	public int qtd;
 	public String siglaPartido;
 }

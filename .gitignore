@@ -10,3 +10,5 @@ src/client/node_modules/
 .DS_Store
 stderr.log
 stdout.log
+.idea/
+cartao-fidelidade.iml
