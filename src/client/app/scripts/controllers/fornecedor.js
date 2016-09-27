@@ -17,10 +17,15 @@
     vm.getFornecedores = getFornecedores;
     vm.selectMunicipio = selectMunicipio;
 
-    vm.fornecedor = Fornecedores.simples.get({"cpfCnpj": vm.cpfCnpj, "ano": vm.ano, "tipo": vm.tipo});
+    Fornecedores.simples.get({"cpfCnpj": vm.cpfCnpj, "ano": vm.ano, "tipo": vm.tipo}, function(data) {
+      vm.fornecedor = data;
+    });
 
     function getFornecedores() {
-      vm.fornecedor = Fornecedores.simples.get({"cpfCnpj": vm.cpfCnpj, "ano": vm.ano, "tipo": vm.tipo});
+      vm.municipioSelecionado = {};
+      Fornecedores.simples.get({"cpfCnpj": vm.cpfCnpj, "ano": vm.ano, "tipo": vm.tipo}, function(data) {
+        vm.fornecedor = data;
+      });
     }
 
     function selectMunicipio(id) {

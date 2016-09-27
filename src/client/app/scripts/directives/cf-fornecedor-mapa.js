@@ -12,7 +12,7 @@
         template: '',
         restrict: 'E',
         scope: {
-          cpfCnpj: '=',
+          fornecedor: '=',
           onSelectMunicipio: '&'
         },
         link: function postLink(scope, element) {
@@ -42,15 +42,22 @@
 
           var features = svg.append('g').attr('id', 'g-map');
 
-          // scope.$watch(function(scope) { return scope.reservatorioSelecionado }, function(newValue, oldValue) {
-          //   var r = newValue.id;
-          //   d3.selectAll(".svg-reservatorio").attr("class", "svg-reservatorio");
-          //   var point = d3.select("#r"+r).attr("class", "svg-reservatorio svg-reservatorio-highlight");
-          //   // console.log(point);
-          //   // var x = (800 - point.attr('cx'))* 1.6;
-          //   // var y = (400 - point.attr('cy'))* 0.05;
-          //   // d3.select("#g-mapa").transition().duration(300).ease("linear").attr("transform", "translate("+x+","+y+")");
-          // });
+          scope.$watch(function(scope) { return scope.fornecedor }, function(newValue, oldValue) {
+            if (!newValue.municipios) { return; }
+            var max = Math.log(d3.max(newValue.municipios, function(d) { return d.valorEmpenhos; }));
+            var min = Math.log(d3.min(newValue.municipios, function(d) { return d.valorEmpenhos; }));
+            var quantize = d3.scale.quantize()
+              .domain([min, max])
+              .range(d3.range(9).map(function(i) { return "category-" + i; }));
+            for (var i = 0; i < 9; i++) {
+              d3.selectAll(".municipio-shape").classed("category-"+i, false);
+            }
+            d3.selectAll(".municipio-shape").classed("category", false);
+            for (var i = 0; i < newValue.municipios.length; i++) {
+              svg.select(".municipio-"+newValue.municipios[i].codMunicipio)
+                .classed("category "+quantize(Math.log(newValue.municipios[i].valorEmpenhos)), true);
+            }
+          });
 
           var mouseOnEvent = function(d) {
             scope.onSelectMunicipio()(d.id);
@@ -61,40 +68,27 @@
             features.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
           }
 
-          function mapaBrasil(br, fornecedor) {
+          function mapaBrasil(br) {
             var brasil = topojson.feature(br, br.objects.municipios);
-
-            var max = Math.log(d3.max(fornecedor.municipios, function(d) { return d.valorEmpenhos; }));
-            var min = Math.log(d3.min(fornecedor.municipios, function(d) { return d.valorEmpenhos; }));
-
-            var quantize = d3.scale.quantize()
-              .domain([min, max])
-              .range(d3.range(9).map(function(i) { return "category-" + i; }));
 
             svg.selectAll(".municipio-shape")
               .data(brasil.features)
             .enter().append("path")
               .attr("id", function(d) { return d.id; })
               .attr("class", function(d) {
-                return "municipio-"+d.id;
+                return "municipio-shape municipio-"+d.id;
               })
               .attr("d", path)
               .on('click', mouseOnEvent);
-
-            for (var i = 0; i < fornecedor.municipios.length; i++) {
-              svg.select(".municipio-"+fornecedor.municipios[i].codMunicipio)
-                .classed("category "+quantize(Math.log(fornecedor.municipios[i].valorEmpenhos)), true);
-            }
           }
 
           d3.queue()
             .defer(d3.json, 'scripts/municipios.json')
-            .defer(d3.json, RESTAPI.url+'/fornecedores/pb/'+scope.cpfCnpj+'/2008/1')
             .await(desenhaMapa);
 
-          function desenhaMapa(error, br, fornecedor) {
+          function desenhaMapa(error, br) {
             if (error) { return console.error(error); }
-            mapaBrasil(br, fornecedor);
+            mapaBrasil(br);
           }
         }
       };
