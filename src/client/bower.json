@@ -1,5 +1,5 @@
 {
-  "name": "sab",
+  "name": "CartaoFidelidadeApp",
   "version": "0.0.0",
   "dependencies": {
     "jquery": "2.2.4",
@@ -11,7 +11,8 @@
     "angular-bootstrap": "^2.0.0",
     "topojson": "^1.6.26",
     "d3-queue": "^3.0.2",
-    "colorbrewer": "^1.0.0"
+    "colorbrewer": "^1.0.0",
+    "at-table": "^1.0.7"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

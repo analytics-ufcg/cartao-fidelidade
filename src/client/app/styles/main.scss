@@ -100,6 +100,9 @@ body {
   margin-bottom: (-1*$padding-large-vertical)-5;
 }
 
+.card-maptooltip {
+}
+
 .text-strong {
   font-size: 1.6em;
 }
@@ -120,12 +123,13 @@ body {
   fill: #fff;
   stroke: rgb(8,48,107);
 }
-.svg-map > path.q0-9 { fill:rgb(247,251,255); }
-.svg-map > path.q1-9 { fill:rgb(222,235,247); }
-.svg-map > path.q2-9 { fill:rgb(198,219,239); }
-.svg-map > path.q3-9 { fill:rgb(158,202,225); }
-.svg-map > path.q4-9 { fill:rgb(107,174,214); }
-.svg-map > path.q5-9 { fill:rgb(66,146,198); }
-.svg-map > path.q6-9 { fill:rgb(33,113,181); }
-.svg-map > path.q7-9 { fill:rgb(8,81,156); }
-.svg-map > path.q8-9 { fill:rgb(8,48,107); }
+.svg-map > path.category:hover { cursor: pointer}
+.svg-map > path.category-0 { fill:rgb(247,251,255); }
+.svg-map > path.category-1 { fill:rgb(222,235,247); }
+.svg-map > path.category-2 { fill:rgb(198,219,239); }
+.svg-map > path.category-3 { fill:rgb(158,202,225); }
+.svg-map > path.category-4 { fill:rgb(107,174,214); }
+.svg-map > path.category-5 { fill:rgb(66,146,198); }
+.svg-map > path.category-6 { fill:rgb(33,113,181); }
+.svg-map > path.category-7 { fill:rgb(8,81,156); }
+.svg-map > path.category-8 { fill:rgb(8,48,107); }

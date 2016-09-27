@@ -3,5 +3,36 @@
   <p>CPF/CNPJ: {{ctrl.fornecedor.cpfCnpj}}</p>
   <p class="text-center"><span class="text-strong">{{ctrl.fornecedor.totalNumEmpenhos}}</span> licitações ganhas no total de <span class="text-strong">{{ctrl.fornecedor.totalValorEmpenhos | currency:'R$ '}}</span></p>
   <br><br>
-  <cf-fornecedor-mapa cpf-cnpj="ctrl.cpfCnpj"></cf-fornecedor-mapa>
+  <div class="row">
+    <div class="col-md-9">
+      <cf-fornecedor-mapa cpf-cnpj="ctrl.cpfCnpj" on-select-municipio="ctrl.selectMunicipio"></cf-fornecedor-mapa>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-maptooltip" ng-if="ctrl.municipioSelecionado.codMunicipio">
+        <p>{{ctrl.municipioSelecionado.nomeMunicipio}}</p>
+        <p>{{ctrl.municipioSelecionado.siglaPartido}}</p>
+        <p>{{ctrl.municipioSelecionado.numEmpenhos}} licitações ganhas</p>
+        <p>{{ctrl.municipioSelecionado.valorEmpenhos | currency:'R$ '}}</p>
+      </div>
+      <select class="form-control" ng-model="ctrl.ano" ng-change="ctrl.getFornecedores()">
+        <option value="2008">Legislatura de 2008 a 2012</option>
+        <option value="2012">Legislatura de 2012 a 2016</option>
+      </select>
+    </div>
+  </div>
+  <h3 class="text-center">Legislatura de {{ctrl.ano}}</h3>
+  <table class="table table-striped">
+    <tr>
+      <th class="text-center">Município</th>
+      <th class="text-center">Partido</th>
+      <th class="text-center">Licitações ganhas</th>
+      <th class="text-center">Valor total ganho</th>
+    </tr>
+    <tr ng-repeat="municipio in ctrl.fornecedor.municipios | orderBy:'-valorEmpenhos'">
+      <td>{{municipio.nomeMunicipio}}</td>
+      <td>{{municipio.siglaPartido}}</td>
+      <td class="text-right">{{municipio.numEmpenhos}}</td>
+      <td class="text-right">{{municipio.valorEmpenhos | currency:'R$ '}}</td>
+    </tr>
+  </table>
 </div>

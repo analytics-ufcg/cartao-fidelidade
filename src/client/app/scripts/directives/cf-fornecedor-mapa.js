@@ -12,7 +12,8 @@
         template: '',
         restrict: 'E',
         scope: {
-          cpfCnpj: '='
+          cpfCnpj: '=',
+          onSelectMunicipio: '&'
         },
         link: function postLink(scope, element) {
           var
@@ -51,10 +52,10 @@
           //   // d3.select("#g-mapa").transition().duration(300).ease("linear").attr("transform", "translate("+x+","+y+")");
           // });
 
-          // var mouseOnEvent = function(d) {
-          //   scope.onSelectReservatorio()(d.properties.ID);
-          //   scope.$apply();
-          // };
+          var mouseOnEvent = function(d) {
+            scope.onSelectMunicipio()(d.id);
+            scope.$apply();
+          };
 
           function zoomed() {
             features.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
@@ -63,24 +64,26 @@
           function mapaBrasil(br, fornecedor) {
             var brasil = topojson.feature(br, br.objects.municipios);
 
-            var colorScale = d3.scale.category20b();
+            var max = Math.log(d3.max(fornecedor.municipios, function(d) { return d.valorEmpenhos; }));
+            var min = Math.log(d3.min(fornecedor.municipios, function(d) { return d.valorEmpenhos; }));
 
             var quantize = d3.scale.quantize()
-              .domain([0, 1000])
-              .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+              .domain([min, max])
+              .range(d3.range(9).map(function(i) { return "category-" + i; }));
 
-            svg.selectAll(".municipio")
+            svg.selectAll(".municipio-shape")
               .data(brasil.features)
             .enter().append("path")
               .attr("id", function(d) { return d.id; })
               .attr("class", function(d) {
                 return "municipio-"+d.id;
               })
-              .attr("d", path);
+              .attr("d", path)
+              .on('click', mouseOnEvent);
 
             for (var i = 0; i < fornecedor.municipios.length; i++) {
               svg.select(".municipio-"+fornecedor.municipios[i].codMunicipio)
-                  .classed(quantize(fornecedor.municipios[i].numEmpenhos), true);
+                .classed("category "+quantize(Math.log(fornecedor.municipios[i].valorEmpenhos)), true);
             }
           }
 
