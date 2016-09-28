@@ -128,6 +128,7 @@ public class FornecedorHandler {
                         fornecedor.municipios = municipios.values().stream()
                                 .sorted((m1, m2) -> Integer.compare(m2.numEmpenhos, m1.numEmpenhos))
                                 .collect(Collectors.toList());
+                        break;
                     case RANKING_FUNCTION_VALOR_EMPENHOS:
                         fornecedor.partidos = partidos.values().stream()
                                 .sorted((p1, p2) -> Double.compare(p2.valorEmpenhos, p1.valorEmpenhos))
@@ -135,6 +136,7 @@ public class FornecedorHandler {
                         fornecedor.municipios = municipios.values().stream()
                                 .sorted((m1, m2) -> Double.compare(m2.valorEmpenhos, m1.valorEmpenhos))
                                 .collect(Collectors.toList());
+                        break;
                 }
             }
         }
